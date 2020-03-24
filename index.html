@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>unkm.fr</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+    <style>
+        body { padding: 0; margin: 0; }
+        html, body, #map { height: 100%; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([46.71109, 1.7191036], 6);
+        mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; ' + mapLink,
+            maxZoom: 18,
+            }).addTo(map);
+		
+		map.on('click', onMapClick);
+		
+		var clickCircle;
+
+		  function onMapClick(e) {
+			if (clickCircle != undefined) {
+			  map.removeLayer(clickCircle);
+			};
+			clickCircle = L.circle(e.latlng, 1000, {
+			  color: '#f07300',
+			  fillOpacity: 0.1,
+			  opacity: 0.5
+			}).addTo(map);
+		  }			
+    </script>
+</body>
+</html>

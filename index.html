@@ -41,7 +41,7 @@
       document.getElementById("gelocation").onclick = geolocationRequest;
 
       function geolocationRequest() {
-        map.locate({setView: true, maxZoom: 15});
+        map.locate({setView: true, maxZoom: 15, enableHighAccuracy: true});
         map.on('locationfound', geolocationFound);
       }
 

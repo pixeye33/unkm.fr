@@ -5,12 +5,14 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
     <style>
-        body { padding: 0; margin: 0; }
+        body { padding: 0; margin: 0; font-family: 'Roboto', arial, 'Segoe UI', 'Roboto', arial, system-ui, BlinkMacSystemFont, 'Roboto', arial, sans-serif; }
         html, body, #map { height: 100%; width: 100%; }
+        #info { position: fixed; z-index: 1000; top: 0; right: 0; width: 400px; text-align: center; border-bottom: 3px solid #f07300; background-color: white; }
     </style>
 </head>
 <body>
     <div id="map"></div>
+    <div id="info">Zoomez sur votre lieu de confinement<br />Cliquez pour dessiner un cercle de 1km de diamètre</div>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script>
         var map = L.map('map').setView([46.71109, 1.7191036], 6);

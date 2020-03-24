@@ -14,9 +14,9 @@
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script>
         var map = L.map('map').setView([46.71109, 1.7191036], 6);
-        mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; ' + mapLink,
             maxZoom: 18,
             }).addTo(map);

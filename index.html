@@ -8,12 +8,17 @@
         body { padding: 0; margin: 0; font-family: 'Roboto', arial, 'Segoe UI', 'Roboto', arial, system-ui, BlinkMacSystemFont, 'Roboto', arial, sans-serif; }
         html, body, #map { height: 100%; width: 100%; }
         h4 { padding: 5px; margin: 5px; }
-        #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -40px; margin-left: -200px; height: 80px; width: 400px; text-align: center; border: 3px solid #f07300; background-color: white; }
+        #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -80px; margin-left: -250px; height: 160px; width: 500px; text-align: center; border: 3px solid #f07300; background-color: white; font-size: 20px; }
     </style>
 </head>
 <body>
     <div id="map"></div>
-    <div id="info"><h4>Comment ça marche ?</h4>Zoomez sur votre lieu de confinement<br />Cliquez pour dessiner un cercle de 1km de rayon</div>
+    <div id="info">
+      <h4>Comment ça marche ?</h4>
+      Zoomez sur votre lieu de confinement<br />
+      Cliquez pour dessiner un cercle de 1km de rayon<br /><br />
+      Vous pouvez aussi vous <button id="gelocation">géolocaliser</button>
+    </div>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script>
       var map = L.map('map').setView([46.71109, 1.7191036], 6);
@@ -33,12 +38,26 @@
         map.off('zoomstart', helpRemove);
       }
 
+      document.getElementById("gelocation").onclick = geolocationRequest;
+
+      function geolocationRequest() {
+        map.locate({setView: true, maxZoom: 15});
+        map.on('locationfound', geolocationFound);
+      }
+
+      function geolocationFound(e) {
+        displayCircle(e);
+      }
+
       map.on('click', displayCircle);
 
       var clickCircle;
+      var clickMarker;
       function displayCircle(e) {
         if (clickCircle != undefined) { map.removeLayer(clickCircle); };
+        if (clickMarker != undefined) { map.removeLayer(clickMarker); };
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
+        clickMarker = L.marker(e.latlng).addTo(map);
       }			
     </script>
 </body>

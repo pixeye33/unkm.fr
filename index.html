@@ -53,9 +53,6 @@
 
       function helpHide(e) {
         document.getElementById("info").style.display = "none";
-        map.off('click', helpHide);
-        map.off('movestart', helpHide);
-        map.off('zoomstart', helpHide);
         map.on('click', locationUpdate);
       }
 

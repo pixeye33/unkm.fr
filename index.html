@@ -7,36 +7,39 @@
     <style>
         body { padding: 0; margin: 0; font-family: 'Roboto', arial, 'Segoe UI', 'Roboto', arial, system-ui, BlinkMacSystemFont, 'Roboto', arial, sans-serif; }
         html, body, #map { height: 100%; width: 100%; }
-        #info { position: fixed; z-index: 1000; top: 0; right: 0; width: 400px; text-align: center; border-bottom: 3px solid #f07300; background-color: white; }
+        h4 { padding: 5px; margin: 5px; }
+        #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -40px; margin-left: -200px; height: 80px; width: 400px; text-align: center; border: 3px solid #f07300; background-color: white; }
     </style>
 </head>
 <body>
     <div id="map"></div>
-    <div id="info">Zoomez sur votre lieu de confinement<br />Cliquez pour dessiner un cercle de 1km de rayon</div>
+    <div id="info"><h4>Comment ça marche ?</h4>Zoomez sur votre lieu de confinement<br />Cliquez pour dessiner un cercle de 1km de rayon</div>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script>
-        var map = L.map('map').setView([46.71109, 1.7191036], 6);
-        mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
-        L.tileLayer(
-            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; ' + mapLink,
-            maxZoom: 18,
-            }).addTo(map);
-		
-		map.on('click', onMapClick);
-		
-		var clickCircle;
+      var map = L.map('map').setView([46.71109, 1.7191036], 6);
+      mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; ' + mapLink, maxZoom: 18}).addTo(map);
 
-		  function onMapClick(e) {
-			if (clickCircle != undefined) {
-			  map.removeLayer(clickCircle);
-			};
-			clickCircle = L.circle(e.latlng, 1000, {
-			  color: '#f07300',
-			  fillOpacity: 0.1,
-			  opacity: 0.5
-			}).addTo(map);
-		  }			
+      map.on('click', helpRemove);
+      map.on('movestart', helpRemove);
+      map.on('zoomstart', helpRemove);
+      document.getElementById("info").onclick = helpRemove;
+
+      function helpRemove(e) {
+        var elem = document.getElementById("info");
+        elem.parentElement.removeChild(elem);
+        map.off('click', helpRemove);
+        map.off('movestart', helpRemove);
+        map.off('zoomstart', helpRemove);
+      }
+
+      map.on('click', displayCircle);
+
+      var clickCircle;
+      function displayCircle(e) {
+        if (clickCircle != undefined) { map.removeLayer(clickCircle); };
+        clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
+      }			
     </script>
 </body>
 </html>

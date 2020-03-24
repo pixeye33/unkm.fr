@@ -8,11 +8,14 @@
         body { padding: 0; margin: 0; font-family: 'Roboto', arial, 'Segoe UI', 'Roboto', arial, system-ui, BlinkMacSystemFont, 'Roboto', arial, sans-serif; }
         html, body, #map { height: 100%; width: 100%; }
         h4 { padding: 5px; margin: 5px; }
-        #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -80px; margin-left: -250px; height: 160px; width: 500px; text-align: center; border: 3px solid #f07300; background-color: white; font-size: 20px; }
+        #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -80px; margin-left: -250px; height: 160px; width: 500px; text-align: center; border: 3px solid #f07300; background-color: white; font-size: 20px; cursor: pointer; }
+        #help { position: fixed; z-index: 1000; bottom: 10px; left: 10px; height: 50px; width: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
+        #help > p { margin: 10px; font-size: 22px; font-weight: bolder; color: white; }
     </style>
 </head>
 <body>
     <div id="map"></div>
+    <div id="help"><p>?</p></div>
     <div id="info">
       <h4>Comment ça marche ?</h4>
       Zoomez sur votre lieu de confinement<br />
@@ -25,10 +28,11 @@
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; ' + mapLink, maxZoom: 18}).addTo(map);
 
-      map.on('click', helpRemove);
-      map.on('movestart', helpRemove);
-      map.on('zoomstart', helpRemove);
-      document.getElementById("info").onclick = helpRemove;
+      map.on('click', helpHide);
+      map.on('movestart', helpHide);
+      map.on('zoomstart', helpHide);
+      document.getElementById("info").onclick = helpHide;
+      document.getElementById("help").onclick = helpDisplay;
       document.getElementById("gelocation").onclick = geolocationRequest;
 
       function locationUpdate(e) {
@@ -41,20 +45,22 @@
           var event = {latlng: L.latLng(hashpos[0], hashpos[1])}
           map.setView(event.latlng, 15);
           displayCircle(event);
-          helpRemove();
+          helpHide();
         }
       }
       window.onhashchange = locationUpdate();
       locationUpdate();
 
-      function helpRemove(e) {
-        if(document.getElementById("info") == null) {return;};
-        var elem = document.getElementById("info");
-        elem.parentElement.removeChild(elem);
-        map.off('click', helpRemove);
-        map.off('movestart', helpRemove);
-        map.off('zoomstart', helpRemove);
+      function helpHide(e) {
+        document.getElementById("info").style.display = "none";
+        map.off('click', helpHide);
+        map.off('movestart', helpHide);
+        map.off('zoomstart', helpHide);
         map.on('click', locationUpdate);
+      }
+
+      function helpDisplay(e) {
+        document.getElementById("info").style.display = "block";
       }
 
       function geolocationRequest() {

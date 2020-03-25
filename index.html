@@ -47,7 +47,7 @@
         if(typeof window.location.hash != "undefined" && window.location.hash.length > 5) {
           hashpos = window.location.hash.substring(1).split(',')
           var event = {latlng: L.latLng(hashpos[0], hashpos[1])}
-          map.setView(event.latlng, 15);
+          map.setView(event.latlng, 14);
           displayCircle(event);
           helpHide();
         }
@@ -65,7 +65,7 @@
       }
 
       function geolocationRequest() {
-        map.locate({setView: true, maxZoom: 15, enableHighAccuracy: true});
+        map.locate({setView: true, maxZoom: 14, enableHighAccuracy: true});
         map.on('locationfound', geolocationFound);
       }
 

@@ -11,7 +11,8 @@
         html, body, #map { height: 100%; width: 100%; }
         h4 { padding: 5px; margin: 5px; }
         #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -80px; margin-left: -252px; height: 160px; width: 500px; text-align: center; border: 2px solid #f07300; background-color: rgba(255, 255, 255, 0.8); font-size: 18px; cursor: pointer; }
-        @media (max-width: 480px) { #info { margin-top: -60px; margin-left: -182px; height: 120px; width: 360px; font-size: 14px; } }
+        #info > a { font-size: 12px; color: #f07300; }
+		@media (max-width: 480px) { #info { margin-top: -60px; margin-left: -182px; height: 120px; width: 360px; font-size: 14px; } }
 		#help { position: fixed; z-index: 1000; bottom: 50px; left: 10px; height: 50px; width: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
         #help > p { margin: 10px; font-size: 22px; font-weight: bolder; color: white; }
     </style>
@@ -22,8 +23,9 @@
     <div id="info">
       <h4>Comment ça marche ?</h4>
       Zoomez sur votre lieu de confinement<br />
-      Cliquez pour dessiner un cercle de 1km de rayon<br /><br />
-      Vous pouvez aussi vous <button id="gelocation">géolocaliser</button>
+      Cliquez pour dessiner un cercle de 1km de rayon*<br /><br />
+      Vous pouvez aussi vous <button id="gelocation">géolocaliser</button><br />
+	  <a href="https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=LEGITEXT000041747861">* texte de loi en vigueur</a>
     </div>
     <script src="ressources/leaflet.js"></script>
     <script>

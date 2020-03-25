@@ -28,7 +28,7 @@
     <script src="ressources/leaflet.js"></script>
     <script>
       var map = L.map('map').setView([46.71109, 1.7191036], 6);
-      mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a>';
+      mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a> | <a href="mentions-legales.html">Mentions légales</a>';
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; ' + mapLink, maxZoom: 18}).addTo(map);
       L.control.scale().addTo(map);
 

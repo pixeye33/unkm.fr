@@ -10,8 +10,9 @@
         body { padding: 0; margin: 0; font-family: 'Roboto', arial, 'Segoe UI', 'Roboto', arial, system-ui, BlinkMacSystemFont, 'Roboto', arial, sans-serif; }
         html, body, #map { height: 100%; width: 100%; }
         h4 { padding: 5px; margin: 5px; }
-        #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -80px; margin-left: -250px; height: 160px; width: 500px; text-align: center; border: 3px solid #f07300; background-color: white; font-size: 16px; cursor: pointer; }
-        #help { position: fixed; z-index: 1000; bottom: 50px; left: 10px; height: 50px; width: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
+        #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -80px; margin-left: -250px; height: 160px; width: 500px; text-align: center; border: 3px solid #f07300; background-color: white; font-size: 18px; cursor: pointer; }
+        @media (max-width: 480px) { #info { margin-top: -60px; margin-left: -200px; height: 120px; width: 400px; font-size: 14px; } }
+		#help { position: fixed; z-index: 1000; bottom: 50px; left: 10px; height: 50px; width: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
         #help > p { margin: 10px; font-size: 22px; font-weight: bolder; color: white; }
     </style>
 </head>

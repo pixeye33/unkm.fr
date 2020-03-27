@@ -23,17 +23,15 @@
 		    @media (max-width: 480px) { #info { margin-top: -60px; margin-left: -182px; height: 120px; width: 360px; font-size: 14px; } }
 		    #help { position: fixed; z-index: 1000; bottom: 50px; left: 10px; height: 50px; width: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
         #help > p { margin: 10px; font-size: 22px; font-weight: bolder; color: white; }
-        #ads-mobile { display: none; position: fixed; z-index: 1000; top: 0px; right: 0px; height: 50px; width: 320px; }
-        #ads-desktop { display: none; position: fixed; z-index: 1000; top: 0px; right: 0px; height: 90px; width: 728px; }
-        @media (max-width: 799px) { #ads-mobile { display: block; } }
-        @media (min-width: 800px) { #ads-desktop { display: block; } }
+        #ads { display: none; position: fixed; z-index: 1000; top: 0px; right: 0px; }
+        @media (max-width: 799px) { #ads { display: block; height: 50px; width: 320px; } }
+        @media (min-width: 800px) { #ads { display: block; height: 90px; width: 728px; } }
     </style>
 </head>
 <body>
     <div id="map"></div>
     <div id="map"></div>
-    <iframe id="ads-mobile" src="" width="320" height="50" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
-    <iframe id="ads-desktop" src="" width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+    <iframe id="ads" src="" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
     <div id="help"><p>?</p></div>
     <div id="info">
       <h4>Comment ça marche ?</h4>
@@ -75,11 +73,11 @@
       function helpHide(e) {
         document.getElementById("info").style.display = "none";
         map.on('click', locationUpdate);
-        if (document.getElementById('ads-mobile').style.display === 'block') {
-          document.getElementById('ads-mobile').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=288&l=ez&f=ifr&linkID=00d83e95f2b90c93fefe066c442dfd8d&t=unkm-21&tracking_id=unkm-21";
+        if (document.getElementById("ads").getBoundingClientRect().width == 320) {
+          document.getElementById('ads').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=288&l=ez&f=ifr&linkID=00d83e95f2b90c93fefe066c442dfd8d&t=unkm-21&tracking_id=unkm-21";
         }
-        else if (document.getElementById('ads-desktop').style.display === 'block') {
-          document.getElementById('ads-desktop').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=48&l=ez&f=ifr&linkID=49293f1e39b41f4fd2e70f91a6f6f226&t=unkm-21&tracking_id=unkm-21";
+        if (document.getElementById("ads").getBoundingClientRect().width == 728) {
+          document.getElementById('ads').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=48&l=ez&f=ifr&linkID=49293f1e39b41f4fd2e70f91a6f6f226&t=unkm-21&tracking_id=unkm-21";
         }
       }
 

@@ -57,7 +57,7 @@
         if(typeof window.location.hash != "undefined" && window.location.hash.length > 5) {
           hashpos = window.location.hash.substring(1).split(',')
           var event = {latlng: L.latLng(hashpos[0], hashpos[1])}
-          map.setView(event.latlng, 14);
+          map.setView(event.latlng, 15);
           displayCircle(event);
           helpHide();
         }

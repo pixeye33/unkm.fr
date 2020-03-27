@@ -20,13 +20,15 @@
         h4 { padding: 5px; margin: 5px; }
         #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -80px; margin-left: -252px; height: 160px; width: 500px; text-align: center; border: 2px solid #f07300; background-color: rgba(255, 255, 255, 0.8); font-size: 18px; cursor: pointer; }
         #info > a { font-size: 12px; color: #f07300; }
-		@media (max-width: 480px) { #info { margin-top: -60px; margin-left: -182px; height: 120px; width: 360px; font-size: 14px; } }
-		#help { position: fixed; z-index: 1000; bottom: 50px; left: 10px; height: 50px; width: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
+		    @media (max-width: 480px) { #info { margin-top: -60px; margin-left: -182px; height: 120px; width: 360px; font-size: 14px; } }
+		    #help { position: fixed; z-index: 1000; bottom: 50px; left: 10px; height: 50px; width: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
         #help > p { margin: 10px; font-size: 22px; font-weight: bolder; color: white; }
+        #ads { position: fixed; z-index: 1000; bottom: 0px; right: 0px; height: 50px; width: 320ps; }
     </style>
 </head>
 <body>
     <div id="map"></div>
+    <iframe id="ads" src="https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=288&l=ez&f=ifr&linkID=00d83e95f2b90c93fefe066c442dfd8d&t=unkm-21&tracking_id=unkm-21" width="320" height="50" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
     <div id="help"><p>?</p></div>
     <div id="info">
       <h4>Comment ça marche ?</h4>
@@ -39,7 +41,7 @@
     <script>
       var map = L.map('map').setView([46.71109, 1.7191036], 6);
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a> | <a href="mentions-legales.txt">Mentions légales</a>';
-      L.tileLayer('https://{s}-tile.unkm.fr/{z}/{x}/{y}.png', {attribution: 'Map data &copy; ' + mapLink, maxZoom: 18}).addTo(map);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; ' + mapLink, maxZoom: 18}).addTo(map);
       L.control.scale().addTo(map);
 
       map.on('click', helpHide);

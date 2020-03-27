@@ -23,9 +23,9 @@
 		    @media (max-width: 480px) { #info { margin-top: -60px; margin-left: -182px; height: 120px; width: 360px; font-size: 14px; } }
 		    #help { position: fixed; z-index: 1000; bottom: 50px; left: 10px; height: 50px; width: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
         #help > p { margin: 10px; font-size: 22px; font-weight: bolder; color: white; }
-        #ads { display: none; position: fixed; z-index: 1000; top: 0px; right: 0px; }
-        @media (max-width: 799px) { #ads { display: block; height: 50px; width: 320px; } }
-        @media (min-width: 800px) { #ads { display: block; height: 90px; width: 728px; } }
+        #ads { position: fixed; z-index: 1000; top: 0px; right: 0px; }
+        @media (max-width: 799px) { #ads { height: 50px; width: 320px; } }
+        @media (min-width: 800px) { #ads { height: 90px; width: 728px; } }
     </style>
 </head>
 <body>
@@ -73,12 +73,6 @@
       function helpHide(e) {
         document.getElementById("info").style.display = "none";
         map.on('click', locationUpdate);
-        if (document.getElementById("ads").getBoundingClientRect().width == 320) {
-          document.getElementById('ads').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=288&l=ez&f=ifr&linkID=00d83e95f2b90c93fefe066c442dfd8d&t=unkm-21&tracking_id=unkm-21";
-        }
-        if (document.getElementById("ads").getBoundingClientRect().width == 728) {
-          document.getElementById('ads').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=48&l=ez&f=ifr&linkID=49293f1e39b41f4fd2e70f91a6f6f226&t=unkm-21&tracking_id=unkm-21";
-        }
       }
 
       function helpDisplay(e) {
@@ -101,7 +95,18 @@
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
-      }      
+      }
+
+      function adsSizer(x) {
+        if (x.matches) { // If media query matches
+          document.getElementById('ads').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=288&l=ez&f=ifr&linkID=00d83e95f2b90c93fefe066c442dfd8d&t=unkm-21&tracking_id=unkm-21";
+        } else {
+          document.getElementById('ads').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=48&l=ez&f=ifr&linkID=49293f1e39b41f4fd2e70f91a6f6f226&t=unkm-21&tracking_id=unkm-21";
+        }
+      }
+
+      adsSizer(window.matchMedia("(max-width: 799px)"))
+      window.matchMedia("(max-width: 799px)").addListener(adsSizer)
     </script>
 </body>
 </html>

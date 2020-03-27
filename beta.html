@@ -31,8 +31,9 @@
 </head>
 <body>
     <div id="map"></div>
-    <iframe id="ads-mobile" src="https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=288&l=ez&f=ifr&linkID=00d83e95f2b90c93fefe066c442dfd8d&t=unkm-21&tracking_id=unkm-21" width="320" height="50" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
-    <iframe id="ads-desktop" src="https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=48&l=ez&f=ifr&linkID=49293f1e39b41f4fd2e70f91a6f6f226&t=unkm-21&tracking_id=unkm-21" width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+    <div id="map"></div>
+    <iframe id="ads-mobile" src="" width="320" height="50" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+    <iframe id="ads-desktop" src="" width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
     <div id="help"><p>?</p></div>
     <div id="info">
       <h4>Comment ça marche ?</h4>
@@ -97,6 +98,14 @@
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
       }
+
+      if (document.getElementById('ads-mobile').style.display === 'block') {
+        document.getElementById('ads-mobile').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=288&l=ez&f=ifr&linkID=00d83e95f2b90c93fefe066c442dfd8d&t=unkm-21&tracking_id=unkm-21";
+      }
+      else if (document.getElementById('ads-desktop').style.display === 'block') {
+        document.getElementById('ads-desktop').src = "https://rcm-eu.amazon-adsystem.com/e/cm?o=8&p=48&l=ez&f=ifr&linkID=49293f1e39b41f4fd2e70f91a6f6f226&t=unkm-21&tracking_id=unkm-21";
+      }
+      
     </script>
 </body>
 </html>

@@ -142,6 +142,8 @@ function getGraphLoopFromEdge(line, graph) {
     // build the edges
     do {
         var next = findNextOnRegion(pred, current, graph.nodes);
+        if (next == -1)
+            return null;
         result.push([current, next]);
 
         pred = current;

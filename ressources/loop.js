@@ -367,14 +367,14 @@ function mergeSameLocation(graph) {
 function addMiddleCrossing(graph) {
      
     // update edges
-    var beforeAdd1 = graph.edges.length;
+    const beforeAdd1 = graph.edges.length;
     for(var e1 = 0; e1 != beforeAdd1; ++e1) {
-        var beforeAdd2 = graph.edges.length;
+        const beforeAdd2 = graph.edges.length;
         for(var e2 = e1; e2 != beforeAdd2; ++e2) {
-            var inter = intersection(graph.edges[e1], graph.edges[e2], graph);
+            const inter = intersection(graph.edges[e1], graph.edges[e2], graph);
             if (inter != null) {
                 // add a new point
-                var newID = newIDPoint(graph, graph.edges[e1][0]);
+                const newID = newIDPoint(graph, graph.edges[e1][0]);
                 graph.nodes[newID] = new L.LatLng(inter.lat, inter.lng);
                 graph.nodes[newID].id = newID;
                 

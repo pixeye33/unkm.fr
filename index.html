@@ -389,10 +389,12 @@
     
                 // select the largest connected component (not perfect to select the main path, but should be ok)
                 contourGraph = keepMainCC(contourGraph);
-
-                // draw the contour
-                for(var e = 0; e != contourGraph.edges.length; ++e) {
-                    window.ClickCircularPaths.push(L.polyline(toPolyLine(contourGraph.edges[e], contourGraph.nodes), { color: '#0060f0'}).addTo(map));
+                
+                if (contourGraph != null) {
+                    // draw the contour
+                    for(var e = 0; e != contourGraph.edges.length; ++e) {
+                        window.ClickCircularPaths.push(L.polyline(toPolyLine(contourGraph.edges[e], contourGraph.nodes), { color: '#0060f0'}).addTo(map));
+                    }
                 }
             }
             

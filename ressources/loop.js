@@ -100,17 +100,17 @@ function intersection(edge1, edge2, graph) {
     if ((edge1[0] != edge2[0]) && (edge1[1] != edge2[1]) &&
         (edge1[1] != edge2[0]) && (edge1[0] != edge2[1])) {
         // Inspired from Turfjs packages/turf-line-intersect/index.ts
-        var x1 = graph.nodes[edge2[0]].lat;
-        var  y1 = graph.nodes[edge2[0]].lng;
-        var  x2 = graph.nodes[edge2[1]].lat;
-        var  y2 = graph.nodes[edge2[1]].lng;
-        var  x3 = graph.nodes[edge1[0]].lat;
-        var  y3 = graph.nodes[edge1[0]].lng;
-        var  x4 = graph.nodes[edge1[1]].lat;
-        var  y4 = graph.nodes[edge1[1]].lng;
-        var  denom = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1));
-        var  numeA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
-        var  numeB = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
+        const x1 = graph.nodes[edge2[0]].lat;
+        const  y1 = graph.nodes[edge2[0]].lng;
+        const  x2 = graph.nodes[edge2[1]].lat;
+        const  y2 = graph.nodes[edge2[1]].lng;
+        const  x3 = graph.nodes[edge1[0]].lat;
+        const  y3 = graph.nodes[edge1[0]].lng;
+        const  x4 = graph.nodes[edge1[1]].lat;
+        const  y4 = graph.nodes[edge1[1]].lng;
+        const  denom = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1));
+        const  numeA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
+        const  numeB = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
 
         if (denom === 0) {
             if (numeA === 0 && numeB === 0) {
@@ -119,8 +119,8 @@ function intersection(edge1, edge2, graph) {
             return null;
         }
 
-        var uA = numeA / denom;
-        var uB = numeB / denom;
+        const uA = numeA / denom;
+        const uB = numeB / denom;
 
         if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
             const x = x1 + (uA * (x2 - x1));
@@ -156,10 +156,10 @@ function getGraphLoopFromEdge(line, graph) {
 
 
 function getLongitudeCrossing(lat, edge, nodes) {
-    var lat1 = nodes[edge[0]].lat;
-    var lat2 = nodes[edge[1]].lat;
-    var lng1 = nodes[edge[0]].lng;
-    var lng2 = nodes[edge[1]].lng;
+    const lat1 = nodes[edge[0]].lat;
+    const lat2 = nodes[edge[1]].lat;
+    const lng1 = nodes[edge[0]].lng;
+    const lng2 = nodes[edge[1]].lng;
 
     if (lat1 > lat2) {
         console.log("ERROR: wrong orientation");
@@ -170,9 +170,9 @@ function getLongitudeCrossing(lat, edge, nodes) {
 }
 
 function getContourEdge(graph) {
-    var edges = graph.edges;
-    var nodes = graph.nodes;
-    var lat = window.center.lat;
+    const edges = graph.edges;
+    const nodes = graph.nodes;
+    const lat = window.center.lat;
     var crossings = [];
 
     // get all the edges that are crossing the line defined by the lattitude of the center
@@ -206,7 +206,7 @@ function getContourEdge(graph) {
 
 function getContour(graph) {
 
-    var contourEdge = getContourEdge(graph);
+    const contourEdge = getContourEdge(graph);
     if (contourEdge == null)
         return null;
 
@@ -276,13 +276,13 @@ function removeDoubleEdges(graph) {
     var edges = {};
 
     for(var e = 0; e != graph.edges.length; ++e) {
-        var edge = graph.edges[e];
+        const edge = graph.edges[e];
         if (edge[0] < edge[1]) {
             var v = edge[0];
             edge[0] = edge[1];
             edge[1] = v;
         }
-        var str = edge[0] + "," + edge[1];
+        const str = edge[0] + "," + edge[1];
         if (str in edges) {
             delete edges[str];
         }
@@ -292,7 +292,7 @@ function removeDoubleEdges(graph) {
     }
     var flatEdges = [];
     for(var e in edges) {
-    flatEdges.push(edges[e]);
+        flatEdges.push(edges[e]);
     }
 
     return filterBySelectedEdges(graph, flatEdges);
@@ -408,13 +408,13 @@ function addMiddleCrossing(graph) {
 }
 
 function addAutointersections(graph) {
-    var t0 = performance.now();
+    const t0 = performance.now();
     graph = mergeSameLocation(graph);
-    var t1 = performance.now();
+    const t1 = performance.now();
     console.log("Call to mergeSameLocation took " + (t1 - t0)/1000 + " seconds.");
     
     graph = addMiddleCrossing(graph);
-    var t2 = performance.now();
+    const t2 = performance.now();
     console.log("Call to addMiddleCrossing took " + (t2 - t1)/1000 + " seconds.");
     
     return graph;
@@ -426,14 +426,14 @@ function displayCircularPath(e) {
     
     removeOldLoop();
    
-    var square = clickCircle.getBounds();
-    var bboxString = square.getSouth() + "," + square.getWest() + ", " + square.getNorth() + "," + square.getEast();
+    const square = clickCircle.getBounds();
+    const bboxString = square.getSouth() + "," + square.getWest() + ", " + square.getNorth() + "," + square.getEast();
 
-    var query = "[out:json][timeout:25];(way[\"highway\"][\"highway\"!~\"motorway\"](" + bboxString + ");way[\"pathway\"](" + bboxString + "););out;>;out skel qt;";
+    const query = "[out:json][timeout:25];(way[\"highway\"][\"highway\"!~\"motorway\"](" + bboxString + ");way[\"pathway\"](" + bboxString + "););out;>;out skel qt;";
 
-    var server = "https://overpass.kumi.systems/api/interpreter";
+    const server = "https://overpass.kumi.systems/api/interpreter";
 
-    var request = new XMLHttpRequest();
+    const request = new XMLHttpRequest();
     
     
     request.open('GET', server + "?data=" + encodeURIComponent(query), true);
@@ -441,11 +441,11 @@ function displayCircularPath(e) {
 
     request.addEventListener("load", function() {
 
-        var idProcess = window.idProcess;
+        const idProcess = window.idProcess;
 
-        var response = JSON.parse(request.response);
+        const response = JSON.parse(request.response);
 
-        var t0 = performance.now();
+        const t0 = performance.now();
 
         // get only nodes inside the disc
         var nodes = getNodesInside(response.elements);
@@ -456,7 +456,7 @@ function displayCircularPath(e) {
         // select the largest connected component (not perfect to select the main path, but should be ok)
         graph = keepMainCC(graph);
         
-        var t1 = performance.now();
+        const t1 = performance.now();
         console.log("First steps took " + (t1 - t0)/1000 + " seconds.");
         // add self intersections as new points: it is a trick to avoid 
         // inversions, that is not satisfying (for example when a self intersection
@@ -464,11 +464,11 @@ function displayCircularPath(e) {
         // and outside?)
         graph = addAutointersections(graph);
 
-        var t0 = performance.now();
+        const t2 = performance.now();
         // build a polygon corresponding to the contour
         graph = getContour(graph);
-        var t1 = performance.now();
-        console.log("Call for getContour took " + (t1 - t0)/1000 + " seconds.");
+        const t3 = performance.now();
+        console.log("Call for getContour took " + (t3 - t2)/1000 + " seconds.");
 
         if (graph != null) {
 
@@ -476,7 +476,7 @@ function displayCircularPath(e) {
             graph = removeDoubleEdges(graph);
 
             // select the largest connected component (not perfect to select the main path, but should be ok)
-            var mainCC = keepMainCC(graph, true);
+            const mainCC = keepMainCC(graph, true);
 
             if (mainCC != null) {
                 graph = mainCC.graph;

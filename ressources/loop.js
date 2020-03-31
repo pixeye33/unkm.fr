@@ -82,7 +82,7 @@ function findNextOnRegion(pred, current, nodes) {
         var n = curNode.neighbours[v];
         if (pred != n.node) {
             var mAngle = computeAngle(predNode, curNode, nodes[n.node]);
-            if (bestNode < 0 || mAngle < angle) {
+            if (bestNode < 0 || (mAngle < angle)) {
                 bestNode = n.node;
                 angle = mAngle;
             }
@@ -95,6 +95,44 @@ function findNextOnRegion(pred, current, nodes) {
 }
 
 
+function intersection(edge1, edge2, graph) {
+    
+    if ((edge1[0] != edge2[0]) && (edge1[1] != edge2[1]) &&
+        (edge1[1] != edge2[0]) && (edge1[0] != edge2[1])) {
+        // Inspired from Turfjs packages/turf-line-intersect/index.ts
+        var x1 = graph.nodes[edge2[0]].lat;
+        var  y1 = graph.nodes[edge2[0]].lng;
+        var  x2 = graph.nodes[edge2[1]].lat;
+        var  y2 = graph.nodes[edge2[1]].lng;
+        var  x3 = graph.nodes[edge1[0]].lat;
+        var  y3 = graph.nodes[edge1[0]].lng;
+        var  x4 = graph.nodes[edge1[1]].lat;
+        var  y4 = graph.nodes[edge1[1]].lng;
+        var  denom = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1));
+        var  numeA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
+        var  numeB = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
+
+        if (denom === 0) {
+            if (numeA === 0 && numeB === 0) {
+                return null;
+            }
+            return null;
+        }
+
+        var uA = numeA / denom;
+        var uB = numeB / denom;
+
+        if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+            const x = x1 + (uA * (x2 - x1));
+            const y = y1 + (uA * (y2 - y1));
+            return {lat: x, lng: y};
+        }
+
+    }
+    
+    return null;
+}
+
 function getGraphLoopFromEdge(line, graph) {
     var result = [];
 
@@ -105,6 +143,7 @@ function getGraphLoopFromEdge(line, graph) {
     do {
         var next = findNextOnRegion(pred, current, graph.nodes);
         result.push([current, next]);
+
         pred = current;
         current = next;
         
@@ -126,9 +165,9 @@ function getLongitudeCrossing(lat, edge, nodes) {
 
     return lng1 + (lng2 -lng1) / (lat2 - lat1) * (lat - lat1);
 
-    }
+}
 
-    function getContourEdge(graph) {
+function getContourEdge(graph) {
     var edges = graph.edges;
     var nodes = graph.nodes;
     var lat = window.center.lat;
@@ -286,6 +325,109 @@ function setInformationDistance(size) {
     setVisibleInformation();
 }
 
+function newIDPoint(graph, startingFrom = 0) {
+    var i = startingFrom;
+    while(i in graph.nodes) {
+        ++i;
+    }
+    return i;
+}
+
+function mergeSameLocation(graph) {
+    
+    var toBeDeleted = [];
+    for(var n1 in graph.nodes) {
+        for(var n2 in graph.nodes) {
+            if (n1 > n2) {
+                if (graph.nodes[n1].lat == graph.nodes[n2].lat 
+                    && graph.nodes[n1].lng == graph.nodes[n2].lng) {
+                    // update the corresponding edges
+                    for(var v = 0; v != graph.nodes[n2].neighbours.length; v++) {
+                        nb = graph.nodes[n2].neighbours[v];
+                        if (graph.edges[nb.edge][0] == n2) graph.edges[nb.edge][0] = n2;
+                        if (graph.edges[nb.edge][1] == n2) graph.edges[nb.edge][1] = n2;
+                    }
+                    
+                    // remove the second node
+                    toBeDeleted.push(n2);
+                }
+            }
+        }
+    }
+    for(var i = 0; i != toBeDeleted.length; ++i)
+        delete graph.nodes[i];
+        
+    // clear nodes
+    for(var e = 0; e != graph.edges.length; ++e) {
+        graph.nodes[graph.edges[e][0]].neighbours = [];
+        graph.nodes[graph.edges[e][1]].neighbours = [];
+    }
+
+    // for each node, create the neighbours list
+    for(var e = 0; e != graph.edges.length; ++e) {
+        graph.nodes[graph.edges[e][0]].neighbours.push({ node: graph.edges[e][1], edge: e});
+        graph.nodes[graph.edges[e][1]].neighbours.push({ node: graph.edges[e][0], edge: e});
+    }
+
+    return graph;    
+}
+
+function addMiddleCrossing(graph) {
+     
+    // update edges
+    var beforeAdd1 = graph.edges.length;
+    for(var e1 = 0; e1 != beforeAdd1; ++e1) {
+        var beforeAdd2 = graph.edges.length;
+        for(var e2 = e1; e2 != beforeAdd2; ++e2) {
+            var inter = intersection(graph.edges[e1], graph.edges[e2], graph);
+            if (inter != null) {
+                // add a new point
+                var newID = newIDPoint(graph, graph.edges[e1][0]);
+                graph.nodes[newID] = new L.LatLng(inter.lat, inter.lng);
+                graph.nodes[newID].id = newID;
+                
+                // add two new edges
+                graph.edges.push([newID, graph.edges[e1][1]]);
+                graph.edges.push([newID, graph.edges[e2][1]]);
+                
+                
+                // update existing edges
+                graph.edges[e1][1] = newID;
+                graph.edges[e2][1] = newID;
+            }
+            
+        }
+    }
+    
+    // clear nodes
+    for(var e = 0; e != graph.edges.length; ++e) {
+        graph.nodes[graph.edges[e][0]].neighbours = [];
+        graph.nodes[graph.edges[e][1]].neighbours = [];
+    }
+
+    // for each node, create the neighbours list
+    for(var e = 0; e != graph.edges.length; ++e) {
+        graph.nodes[graph.edges[e][0]].neighbours.push({ node: graph.edges[e][1], edge: e});
+        graph.nodes[graph.edges[e][1]].neighbours.push({ node: graph.edges[e][0], edge: e});
+    }
+
+    return graph;
+   
+}
+
+function addAutointersections(graph) {
+    var t0 = performance.now();
+    graph = mergeSameLocation(graph);
+    var t1 = performance.now();
+    console.log("Call to mergeSameLocation took " + (t1 - t0)/1000 + " seconds.");
+    
+    graph = addMiddleCrossing(graph);
+    var t2 = performance.now();
+    console.log("Call to addMiddleCrossing took " + (t2 - t1)/1000 + " seconds.");
+    
+    return graph;
+}
+
 
 function displayCircularPath(e) {
     setVisibleComputation();
@@ -311,6 +453,8 @@ function displayCircularPath(e) {
 
         var response = JSON.parse(request.response);
 
+        var t0 = performance.now();
+
         // get only nodes inside the disc
         var nodes = getNodesInside(response.elements);
 
@@ -319,9 +463,20 @@ function displayCircularPath(e) {
                                                                 
         // select the largest connected component (not perfect to select the main path, but should be ok)
         graph = keepMainCC(graph);
+        
+        var t1 = performance.now();
+        console.log("First steps took " + (t1 - t0)/1000 + " seconds.");
+        // add self intersections as new points: it is a trick to avoid 
+        // inversions, that is not satisfying (for example when a self intersection
+        // corresponds to a bridge), but cannot handle contour without that trick (what is inside 
+        // and outside?)
+        graph = addAutointersections(graph);
 
+        var t0 = performance.now();
         // build a polygon corresponding to the contour
         graph = getContour(graph);
+        var t1 = performance.now();
+        console.log("Call for getContour took " + (t1 - t0)/1000 + " seconds.");
 
         if (graph != null) {
 
@@ -333,6 +488,7 @@ function displayCircularPath(e) {
 
             if (mainCC != null) {
                 graph = mainCC.graph;
+                
                 // draw the contour
                 for(var e = 0; e != graph.edges.length; ++e) {
                     window.ClickCircularPaths.push(L.polyline(toPolyLine(graph.edges[e], graph.nodes), { color: '#0060f0'}).addTo(map));
@@ -345,7 +501,7 @@ function displayCircularPath(e) {
             }
         }
         else {
-                setInformationError();
+            setInformationError();
         }
         
         

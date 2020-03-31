@@ -59,7 +59,7 @@
                 <p>Choisissez d'abord un lieu</p>
             </div>
             <div id="computation">
-                <p>Calcul d'itinéraire en cours...</p>
+                <p>Calcul de l'itinéraire...</p>
             </div>
             <div id="informationLoop">
                 <p id="msgLoop"></p>
@@ -147,7 +147,7 @@
       function loopPanelDisplay(e) {
         if (document.getElementById("loop-panel").style.display == "block") {
             document.getElementById("loop-panel").style.display = "none";
-            removeOldLoop();
+            if (removeOldLoop) removeOldLoop();
             setVisibleInitialQuestion();
         }
         else

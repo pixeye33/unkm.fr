@@ -336,26 +336,16 @@ function newIDPoint(graph, startingFrom = 0) {
 }
 
 function mergeSameLocation(graph) {
-    
     var toBeDeleted = [];
+    
+    var list = {};
     for(var n1 in graph.nodes) {
-        for(var n2 in graph.nodes) {
-            if (n1 > n2) {
-                if (graph.nodes[n1].lat == graph.nodes[n2].lat 
-                    && graph.nodes[n1].lng == graph.nodes[n2].lng) {
-                    // update the corresponding edges
-                    for(var v = 0; v != graph.nodes[n2].neighbours.length; v++) {
-                        nb = graph.nodes[n2].neighbours[v];
-                        if (graph.edges[nb.edge][0] == n2) graph.edges[nb.edge][0] = n2;
-                        if (graph.edges[nb.edge][1] == n2) graph.edges[nb.edge][1] = n2;
-                    }
-                    
-                    // remove the second node
-                    toBeDeleted.push(n2);
-                }
-            }
+        const str = graph.nodes[n1].lat + "," + graph.nodes[n1].lng;
+        if (str in list) {
+            toBeDeleted.push(n1);
         }
     }
+    
     for(var i = 0; i != toBeDeleted.length; ++i)
         delete graph.nodes[i];
         

@@ -22,17 +22,50 @@
         #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -80px; margin-left: -252px; height: 160px; width: 500px; text-align: center; border: 2px solid #f07300; background-color: rgba(255, 255, 255, 0.8); font-size: 18px; cursor: pointer; }
         #info > a { font-size: 12px; color: #f07300; }
         @media (max-width: 480px) { #info { margin-top: -60px; margin-left: -182px; height: 120px; width: 360px; font-size: 14px; } }
-        .buttons {position: fixed; z-index: 1000; left: 10px; height: 50px; width: 50px; }
-        #help { bottom: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; }
+        .buttons, .panel {position: fixed; z-index: 1000; left: 10px; height: 50px; width: 50px; }
+        #help { bottom: 50px; text-align: center; border-radius: 50%; background-color: #f07300; font-size: 20px; cursor: pointer; padding-top: 4px;}
         #help > p { margin: 10px; font-size: 22px; font-weight: bolder; color: white; }
+        #loop { bottom: 110px; background-color: #f07300; border-radius: 25px; }
+        #loop #loopButton { fill: #ffffff; width: 50px; cursor: pointer; float: left; }
         .share { fill: #f07300;  stroke: none; border-radius: 50%; background-color: #fff; }
-        #share-facebook { bottom: 170px; }
-        #share-twitter { bottom: 110px; }
+        #share-facebook { bottom: 230px; }
+        #share-twitter { bottom: 170px; }
+        #loop-panel { display: none; float: left; position: relative; color: #fff;}
+        #loop-panel p { width: 330px; margin: 0; margin-top: 2px; }
+        #loop-panel #noteLoop { font-size: 60%; }
+        #txtPanel, #buttonOKLoop, #computation, #informationLoop, #nodisc { float: left; position: relative;}
+        .panel { width: auto; min-width: 50px; }
+        #buttonOKLoop { width: 42px; height: 42px; background-color: #a64d00; border-radius: 25px; padding-top: 1px; margin: 4px; cursor: pointer; }
+        #buttonOKLoop p { font-size: 20px; font-weight: bolder; color: white; padding: 7px; }
+        #computation, #informationLoop, #nodisc { display: none; }
+        #computation p, #nodisc p { font-size: 20px; padding: 10px;  }
+        #msgLoop { font-size: 18px; padding: 12px;  }
     </style>
 </head>
 <body>
     <div id="map"></div>
     <div id="help" class="buttons"><p>?</p></div>
+    <div id="loop" class="panel">
+        <div id="loopButton"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="m 328.13276,146.90404 c 3.57045,-0.75574 7.44516,0.33901 11.1102,3.67862 11.16746,10.17579 13.06734,25.03121 4.47931,34.02769 -10.19817,10.68254 -20.80379,7.47079 -25.61759,-6.49712 -0.34386,-0.99767 -0.6334,-2.08432 -0.92911,-3.17668 -0.2957,-1.09236 -0.59734,-2.19051 -0.81346,-3.40495 -2.25678,-12.68006 3.91563,-22.96495 11.77076,-24.62756 z m -31.23759,26.56781 c 6.15075,-0.77496 13.46118,5.70946 15.20124,15.88307 2.36392,13.82501 -8.037,21.51291 -17.66241,17.71915 -7.42279,-2.86717 -10.80364,-12.70025 -10.98092,-15.55089 -0.47123,-7.5788 6.12403,-17.12948 13.44209,-18.05133 z m -22.2302,27.41983 c 4.76334,-1.00416 6.38967,1.87904 7.58862,10.35198 2.48201,17.5424 -16.87856,25.25158 -21.73163,8.65938 -2.17034,-7.42007 0.64376,-13.14753 8.22409,-16.79184 2.3805,-1.14445 4.331,-1.88444 5.91892,-2.21914 z m -24.7841,27.42146 c 8.82356,-2.73446 10.42453,0.16765 9.16394,16.98493 -0.54913,7.32625 -3.78269,9.97125 -9.81414,8.23828 -4.12978,-1.18663 -6.62696,-4.51744 -7.57444,-8.43138 -1.57942,-6.52331 1.24439,-14.62903 8.2241,-16.79183 z m 83.27733,-1.51396 c 7.51826,-2.38393 14.79159,-4.10719 21.37436,-4.89158 32.4109,-3.86227 42.8218,-0.32027 59.16743,20.15904 22.41075,28.07657 17.86533,67.94955 -11.54384,102.12342 -63.76031,74.09158 -64.79126,123.77324 -3.78782,179.79329 25.11249,23.0615 43.28546,77.26078 35.46228,105.65264 -9.85288,35.75846 -47.36777,49.43128 -80.10814,29.25261 -30.70957,-18.92572 -65.50037,-83.62098 -89.22844,-160.97448 -1.97739,-6.4464 -3.91447,-12.98062 -5.72965,-19.58957 -5.44518,-19.8263 -10.08525,-40.28971 -13.76663,-60.79295 -11.12001,-61.92753 -8.40629,-110.12004 7.84771,-139.09011 10.1447,-18.08133 47.73323,-41.31247 80.30996,-51.64263 z m 52.58359,-108.48363 c 15.12323,-4.68666 19.51428,8.06427 24.78737,17.84295 9.25777,17.16658 18.06442,39.33023 10.44962,56.38008 -8.5181,19.07354 -25.02138,24.22281 -44.83677,12.09422 -9.94888,-6.08911 -11.22911,-10.70981 -13.8752,-20.19231 -0.88224,-3.16086 -1.61378,-7.62407 -2.19252,-11.99659 -4.00383,-30.24919 1.75707,-46.71811 25.66776,-54.12835 z m 297.29582,249.48681 c -3.49411,-1.05376 -7.44726,-0.28922 -11.38053,2.72986 -11.98478,9.19913 -15.12902,23.84176 -7.32916,33.52956 9.26226,11.50346 20.10069,9.19632 26.07375,-4.31656 0.42667,-0.96517 0.80668,-2.02356 1.19334,-3.08715 0.38665,-1.06357 0.7797,-2.13241 1.09732,-3.32433 3.31667,-12.44496 -1.96762,-23.21314 -9.65482,-25.53139 z m 28.88911,29.10421 c -6.06364,-1.29021 -13.8942,4.5555 -16.48489,14.54642 -3.51984,13.5768 6.19665,22.11333 16.10738,19.14369 7.6379,-2.23184 11.83485,-11.74525 12.25158,-14.57084 1.10784,-7.51219 -4.65964,-17.58438 -11.87407,-19.11927 z m 19.84195,29.19461 c -4.66184,-1.40176 -6.52521,1.33424 -8.43349,9.6761 -3.95059,17.27106 14.69195,26.58336 20.92515,10.45883 2.78753,-7.21093 0.46579,-13.15505 -6.78068,-17.4248 -2.27566,-1.34088 -4.15692,-2.24251 -5.711,-2.70975 z m 22.38665,29.41133 c -8.56192,-3.46785 -10.40161,-0.71089 -10.56183,16.15281 -0.0699,7.34647 2.92949,10.2544 9.08546,9.03555 4.21505,-0.8346 6.98386,-3.94328 8.25761,-7.76352 2.12319,-6.36711 -0.008,-14.68185 -6.78069,-17.42479 z m -82.85396,-8.52209 c -7.29077,-3.00865 -14.39314,-5.33833 -20.88646,-6.67433 -31.97048,-6.57816 -42.64269,-3.92553 -60.655,15.10441 -24.6957,26.08943 -23.52448,66.20355 2.90213,102.73282 57.2939,79.19816 54.13705,128.79014 -11.36761,179.47357 -26.96546,20.86461 -49.63848,73.34084 -44.23422,102.29067 6.80634,36.46124 43.03644,53.245 77.35992,35.89528 32.19437,-16.27208 72.31013,-77.80747 102.4685,-152.88786 2.51328,-6.25696 4.99379,-12.60484 7.3591,-19.03744 7.09559,-19.2973 13.44257,-39.29722 18.83764,-59.41755 16.29597,-60.771 17.6506,-109.02086 3.89417,-139.25689 -8.58588,-18.87147 -44.08438,-45.18574 -75.67537,-58.22278 z M 628.04095,334.46367 c -14.67481,-5.94366 -20.12413,6.39215 -26.20203,15.69201 -10.67062,16.32591 -21.31259,37.66913 -15.16076,55.29971 6.88149,19.72317 22.89248,26.24403 43.65893,15.82736 10.42634,-5.2296 12.09117,-9.72607 15.52646,-18.95203 1.14532,-3.07531 2.25014,-7.46108 3.19508,-11.7693 6.53715,-29.80455 2.18371,-46.70012 -21.01795,-56.09777 z" /></svg></div>
+        <div id="loop-panel">
+            <div id="txtPanel">
+                <p id="txtLoop">Afficher l'itinéraire de promenade circulaire*</p>
+                <p id="noteLoop">* votre localisation sera envoyée au serveur <a href="https://overpass.kumi.systems">Overpass de Kumi Systems</a> pour obtenir les tracés OpenStreetMap des routes de votre voisinage.</p>
+            </div>
+            <div id="buttonOKLoop">
+                <p>OK</p>
+            </div>
+            <div id="nodisc">
+                <p>Choisissez d'abord un lieu</p>
+            </div>
+            <div id="computation">
+                <p>Calcul d'itinéraire en cours...</p>
+            </div>
+            <div id="informationLoop">
+                <p id="msgLoop"></p>
+            </div>
+        </div>
+    </div>
     <a id="share-facebook" class="buttons share" href="https://facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.unkm.fr" target="_blank" rel="noopener" aria-label="">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 0C5.38 0 0 5.38 0 12s5.38 12 12 12 12-5.38 12-12S18.62 0 12 0zm3.6 11.5h-2.1v7h-3v-7h-2v-2h2V8.34c0-1.1.35-2.82 2.65-2.82h2.35v2.3h-1.4c-.25 0-.6.13-.6.66V9.5h2.34l-.24 2z"/></svg>
     </a>
@@ -58,10 +91,70 @@
       map.on('zoomstart', helpHide);
       document.getElementById("info").onclick = helpHide;
       document.getElementById("help").onclick = helpDisplay;
+      document.getElementById("loopButton").onclick = loopPanelDisplay;
       document.getElementById("gelocation").onclick = geolocationRequest;
+      document.getElementById("buttonOKLoop").onclick = showLoop;
 
+      
+      function showLoopInternal() {
+        map.on('click', locationAndLoopUpdate);
+        if (typeof window.location.hash != "undefined" && window.location.hash.length > 5)
+            displayCircularPath();
+        else
+            setVisibleNoDisc();
+      }
+      
+      function showLoop(e) {
+        window.ClickCircularPaths = [];
+        var scriptTag = document.createElement('script');
+        scriptTag.src = "ressources/loop.js";
+        scriptTag.onload = showLoopInternal;
+        scriptTag.onreadystatechange = showLoopInternal;
+        document.body.appendChild(scriptTag);
 
+      }
+      
+      function setVisibleInitialQuestion() {
+        document.getElementById("txtPanel").style.display = "block";
+        document.getElementById("buttonOKLoop").style.display = "block";
+        document.getElementById("informationLoop").style.display = "none";
+        document.getElementById("computation").style.display = "none";
+        document.getElementById("nodisc").style.display = "none";         
+      }
+      function setVisibleComputation() {
+        document.getElementById("txtPanel").style.display = "none";
+        document.getElementById("buttonOKLoop").style.display = "none";
+        document.getElementById("informationLoop").style.display = "none";
+        document.getElementById("computation").style.display = "block";         
+        document.getElementById("nodisc").style.display = "none";
+      }
+      function setVisibleInformation() {
+        document.getElementById("txtPanel").style.display = "none";
+        document.getElementById("buttonOKLoop").style.display = "none";
+        document.getElementById("informationLoop").style.display = "block";
+        document.getElementById("computation").style.display = "none";         
+        document.getElementById("nodisc").style.display = "none";
+      }
+      function setVisibleNoDisc() {
+        document.getElementById("txtPanel").style.display = "none";
+        document.getElementById("buttonOKLoop").style.display = "none";
+        document.getElementById("informationLoop").style.display = "none";
+        document.getElementById("computation").style.display = "none";         
+        document.getElementById("nodisc").style.display = "block";
+      }
+      
+      
+      function loopPanelDisplay(e) {
+        if (document.getElementById("loop-panel").style.display == "block") {
+            document.getElementById("loop-panel").style.display = "none";
+            removeOldLoop();
+            setVisibleInitialQuestion();
+        }
+        else
+            document.getElementById("loop-panel").style.display = "block";
+      }
 
+      
       function helpHide(e) {
         document.getElementById("info").style.display = "none";
         map.on('click', locationUpdate);
@@ -89,334 +182,24 @@
         clickMarker = L.marker(e.latlng).addTo(map);
         window.center = e.latlng;
       }
-      
-      function getNodesInside(elements, center) {
-        var result = {};
-        
-        for(var i = 0; i != elements.length; ++i) {
-            if (elements[i].type == "node") {
-                var p = L.latLng(elements[i].lat, elements[i].lon);
-                if (p.distanceTo(window.center) < 1000) {
-                    result[elements[i].id] = p;
-                    result[elements[i].id].neighbours = [];
-                    result[elements[i].id].id = elements[i].id;
-                }
-            }
-        }
-
-        return result;
-      }
-      
-      function buildGraphInside(elements, nodes) {
-        var result = [];
-        for(var i = 0; i != elements.length; ++i) {
-            if (elements[i].type == "way" || elements[i].type == "pathway") {                
-                if (elements[i].nodes.length > 1) {
-                    for(var n = 1; n != elements[i].nodes.length; ++n) {
-                        var idN = elements[i].nodes[n];
-                        var idNm1 = elements[i].nodes[n - 1];
-                        if (idNm1 in nodes && idN in nodes) {
-                            result.push([parseInt(idNm1), parseInt(idN)]);
-                            var idE = result.length - 1;
-                            nodes[idNm1].neighbours.push({ node: idN, edge: idE});
-                            nodes[idN].neighbours.push({ node: idNm1, edge: idE});
-                        }
-                    }
-                }
-            }
-        }
-
-        return {nodes: nodes, edges: result};
-      }
-      
-      
-      function filterBySelectedEdges(graph, edges) {
-        var newNodes = {};
-        
-        // create the set of new nodes
-        for(var e = 0; e != edges.length; ++e) {
-            newNodes[edges[e][0]] = graph.nodes[edges[e][0]];
-            newNodes[edges[e][1]] = graph.nodes[edges[e][1]];
-            newNodes[edges[e][0]].neighbours = [];
-            newNodes[edges[e][1]].neighbours = [];
-        }
-        
-        // for each node, create the neighbours list
-        for(var e = 0; e != edges.length; ++e) {
-            newNodes[edges[e][0]].neighbours.push({ node: edges[e][1], edge: e});
-            newNodes[edges[e][1]].neighbours.push({ node: edges[e][0], edge: e});
-        }
-
-        return { nodes: newNodes, edges: edges };
-      }
-      
-      // compute a pseudo angle defined by a polyline (n1, n2, n3)
-      function computeAngle(n1, n2, n3) {      
-        var v1 = [n2.lat - n1.lat, n2.lng - n1.lng];
-        var v2 = [n3.lat - n2.lat, n3.lng - n2.lng];
-        var dot = v1[0] * v2[0] + v1[1] * v2[1];
-        var det = v1[0] * v2[1] - v1[1] * v2[0];
-        return Math.atan2(det, dot);
-
-      }
-      
-      function findNextOnRegion(pred, current, nodes) {
-        var predNode = nodes[pred];
-        var curNode = nodes[current];
-        // if it is a dead-end, we go back to the 
-        if (curNode.neighbours.length == 1) {
-            return pred;
-        }
-      
-        var bestNode = -1;
-        var angle = 0;
-        for(var v = 0; v != curNode.neighbours.length; ++v) {
-            var n = curNode.neighbours[v];
-            if (pred != n.node) {
-                var mAngle = computeAngle(predNode, curNode, nodes[n.node]);
-                if (bestNode < 0 || mAngle < angle) {
-                    bestNode = n.node;
-                    angle = mAngle;
-                }
-            }
-        }
-        if (bestNode == -1)
-            console.log("ERROR: cannot find next point");
-        return bestNode;
-      
-      }
-      
-      
-      function getGraphLoopFromEdge(line, graph) {
-        var result = [];
-        
-        var pred = line[0];
-        var current = line[1];
-        
-        // build the edges
-        do {
-            var next = findNextOnRegion(pred, current, graph.nodes);
-            result.push([current, next]);
-            pred = current;
-            current = next;
             
-        } while ((pred != line[0]) || (current != line[1]));
-        
-        return filterBySelectedEdges(graph, result);
-      }
-      
-      
-      function getLongitudeCrossing(lat, edge, nodes) {
-        var lat1 = nodes[edge[0]].lat;
-        var lat2 = nodes[edge[1]].lat;
-        var lng1 = nodes[edge[0]].lng;
-        var lng2 = nodes[edge[1]].lng;
-        
-        if (lat1 > lat2) {
-            console.log("ERROR: wrong orientation");
-        }
-        
-        return lng1 + (lng2 -lng1) / (lat2 - lat1) * (lat - lat1);
-      
-      }
-      
-      function getContourEdge(graph) {
-        var edges = graph.edges;
-        var nodes = graph.nodes;
-        var lat = window.center.lat;
-        var crossings = [];
-        
-        // get all the edges that are crossing the line defined by the lattitude of the center
-        for(var l = 0; l != edges.length; ++l) {
-            if (nodes[edges[l][0]].lat <= lat && nodes[edges[l][1]].lat > lat) {
-                crossings.push({edge: edges[l], coord: getLongitudeCrossing(lat, edges[l], nodes) });
-            }
-            else if (nodes[edges[l][1]].lat <= lat && nodes[edges[l][0]].lat > lat) {
-                crossings.push({edge: [edges[l][1], edges[l][0]], coord: getLongitudeCrossing(lat, [edges[l][1], edges[l][0]], nodes) });
-            }
-        }
-        
-        if (crossings.length == 0) {
-            console.log("ERROR: cannot find a contour edge");
-            return null;
-        }
-        // find the smallest longitude
-        var result = 0;
-        var longitude = crossings[result].coord;
-        for(var i = 0; i < crossings.length; ++i) {
-            if (crossings[i].coord < longitude) {
-                result = i;
-                longitude = crossings[i].coord;
-            }
-        }
-        
-        return crossings[result].edge;
-      
-      }
-      
-      
-      function getContour(graph) {
-        
-        var contourEdge = getContourEdge(graph);
-        if (contourEdge == null)
-            return null;
-        
-        return getGraphLoopFromEdge(contourEdge, graph);
-      }
-      
-      function browseCC(nodeID, graph) {
-        graph.nodes[nodeID].seen = true;
-        var result = { edges: [], size: 0 };
-        for(var nb = 0; nb != graph.nodes[nodeID].neighbours.length; ++nb) {
-            var neighbour = graph.nodes[nodeID].neighbours[nb].node;
-            var edge = graph.nodes[nodeID].neighbours[nb].edge;
-            // to avoid multiple instances of an edge, only add it from the first node
-            if (graph.edges[edge][0] == nodeID)
-                result.edges.push(graph.edges[edge]);
-            // then use recursive call if required
-            if (!graph.nodes[neighbour].seen) {                
-                result.size += graph.nodes[nodeID].distanceTo(graph.nodes[neighbour]);
-                var run = browseCC(neighbour, graph);
-                result.edges = result.edges.concat(run.edges);
-                result.size += run.size;
-            }
-        }
-        
-        return result;
-      }
-      
-      function keepMainCC(graph) {
-        var cc = [];
-        
-        for(var n in graph.nodes) {
-            graph.nodes[n].seen = false;
-        }
-        
-        
-        // compute connecte component size
-        for(var n in graph.nodes) {
-            n = parseInt(n);
-            if (!graph.nodes[n].seen) {
-                cc.push(browseCC(n, graph));
-            }
-        }
-        
-        if (cc.length == 0)
-            return null;
-        
-        // select the largest one
-        var idCC = 0;
-        var size = cc[idCC].size;
-        for(var i = 1; i != cc.length; ++i) {
-            if (cc[i].size > size) {
-                idCC = i;
-                size = cc[i].size;
-            }
-        }
-        return filterBySelectedEdges(graph, cc[idCC].edges);
-      }
-      
-      
-      function removeDoubleEdges(graph) {
-      
-        var edges = {};
-        
-        for(var e = 0; e != graph.edges.length; ++e) {
-            var edge = graph.edges[e];
-            if (edge[0] < edge[1]) {
-                var v = edge[0];
-                edge[0] = edge[1];
-                edge[1] = v;
-            }
-            var str = edge[0] + "," + edge[1];
-            if (str in edges) {
-                delete edges[str];
-            }
-            else {
-                edges[str] = edge;
-            }
-        }
-        var flatEdges = [];
-        for(var e in edges) {
-            flatEdges.push(edges[e]);
-        }
-        
-        return filterBySelectedEdges(graph, flatEdges);
-      }
-      
-      function toPolyLine(edge, nodes) {
-        return [[nodes[edge[0]].lat, nodes[edge[0]].lng], [nodes[edge[1]].lat, nodes[edge[1]].lng]];
-      }
-      
-      window.ClickCircularPaths = [];
-      function displayCircularPath(e) {
-        if (window.ClickCircularPaths.length != 0) { 
-            for(var p = 0; p != window.ClickCircularPaths.length; ++p) {
-                map.removeLayer(window.ClickCircularPaths[p]); 
-            }
-        }
-        var square = clickCircle.getBounds();
-        var bboxString = square.getSouth() + "," + square.getWest() + ", " + square.getNorth() + "," + square.getEast();
-        
-        var query = "[out:json][timeout:25];(way[\"highway\"][\"highway\"!~\"motorway\"](" + bboxString + ");way[\"pathway\"](" + bboxString + "););out;>;out skel qt;";
-        
-        var server = "https://overpass.kumi.systems/api/interpreter";
-        
-        var request = new XMLHttpRequest();
-                
-        request.open('GET', server + "?data=" + encodeURIComponent(query), true);
-        request.setRequestHeader('Content-type', 'application/json');
-
-        request.addEventListener("load", function() { 
-            var response = JSON.parse(request.response);
-            
-            // get only nodes inside the disc
-            var nodes = getNodesInside(response.elements);
-            
-            // get all edges inside the disc
-            var graph = buildGraphInside(response.elements, nodes);
-                                                                    
-            // select the largest connected component (not perfect to select the main path, but should be ok)
-            graph = keepMainCC(graph);
-
-            // build a polygon corresponding to the contour
-            var contourGraph = getContour(graph);
-
-            if (contourGraph != null) {
-    
-                // remove edges twice in the shape
-                contourGraph = removeDoubleEdges(contourGraph);
-    
-                // select the largest connected component (not perfect to select the main path, but should be ok)
-                contourGraph = keepMainCC(contourGraph);
-                
-                if (contourGraph != null) {
-                    // draw the contour
-                    for(var e = 0; e != contourGraph.edges.length; ++e) {
-                        window.ClickCircularPaths.push(L.polyline(toPolyLine(contourGraph.edges[e], contourGraph.nodes), { color: '#0060f0'}).addTo(map));
-                    }
-                }
-            }
-            
-        });
-        request.send();
-        
-      }
-      
       function locationUpdate(e) {
-        if(e) {
-          if(map.getZoom() < 12) {return;};
-          window.location.hash = e.latlng.lat+','+e.latlng.lng;
-        }
-        var lPos = window.location.hash.substring(1).split(',');
-        if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 &&
-            window.hashpos != lPos) {
-          window.hashpos = lPos;
-          var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
-          map.setView(event.latlng, 15);
-          displayCircle(event);
-          displayCircularPath(event);
-          helpHide();
+            if (document.getElementById("loop-panel").style.display != "block" ||
+                document.getElementById("computation").style.display != "block") {
+            if(e) {
+            if(map.getZoom() < 12) {return;};
+            window.location.hash = e.latlng.lat+','+e.latlng.lng;
+            }
+            var lPos = window.location.hash.substring(1).split(',');
+            if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 &&
+                window.hashpos != lPos) {
+            window.hashpos = lPos;
+            var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
+            map.setView(event.latlng, 15);
+            displayCircle(event);
+            
+            helpHide();
+            }
         }
       }
       window.hashpos = "";

@@ -321,21 +321,21 @@ function displayCircularPath(e) {
         graph = keepMainCC(graph);
 
         // build a polygon corresponding to the contour
-        var contourGraph = getContour(graph);
+        graph = getContour(graph);
 
-        if (contourGraph != null) {
+        if (graph != null) {
 
             // remove edges twice in the shape
-            contourGraph = removeDoubleEdges(contourGraph);
+            graph = removeDoubleEdges(graph);
 
             // select the largest connected component (not perfect to select the main path, but should be ok)
-            var mainCC = keepMainCC(contourGraph, true);
+            var mainCC = keepMainCC(graph, true);
 
             if (mainCC != null) {
-                contourGraph = mainCC.graph;
+                graph = mainCC.graph;
                 // draw the contour
-                for(var e = 0; e != contourGraph.edges.length; ++e) {
-                    window.ClickCircularPaths.push(L.polyline(toPolyLine(contourGraph.edges[e], contourGraph.nodes), { color: '#0060f0'}).addTo(map));
+                for(var e = 0; e != graph.edges.length; ++e) {
+                    window.ClickCircularPaths.push(L.polyline(toPolyLine(graph.edges[e], graph.nodes), { color: '#0060f0'}).addTo(map));
                 }
 
                 setInformationDistance(mainCC.size);

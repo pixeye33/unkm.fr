@@ -406,15 +406,18 @@
           if(map.getZoom() < 12) {return;};
           window.location.hash = e.latlng.lat+','+e.latlng.lng;
         }
-        if(typeof window.location.hash != "undefined" && window.location.hash.length > 5) {
-          hashpos = window.location.hash.substring(1).split(',')
-          var event = {latlng: L.latLng(hashpos[0], hashpos[1])}
+        var lPos = window.location.hash.substring(1).split(',');
+        if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 &&
+            window.hashpos != lPos) {
+          window.hashpos = lPos;
+          var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
           map.setView(event.latlng, 15);
           displayCircle(event);
           displayCircularPath(event);
           helpHide();
         }
       }
+      window.hashpos = "";
       window.onhashchange = locationUpdate();
       locationUpdate();
       

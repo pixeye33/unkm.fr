@@ -534,10 +534,13 @@ function displayCircularPath(e) {
 
 function locationAndLoopUpdate(e) {
     if (document.getElementById("loop").className.split(" ").indexOf("openPanel") != -1) {
-        if (typeof window.location.hash != "undefined" && window.location.hash.length > 5)
+        if (typeof window.location.hash != "undefined" && window.location.hash.length > 5) {
             displayCircularPath(e);
-        else
+        }
+        else {
             setVisibleNoDisc();
+        }
+            
     }
     else {
         setVisibleInitialQuestion();

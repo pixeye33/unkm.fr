@@ -123,7 +123,7 @@
 
       
       function showLoopInternal() {
-        map.on('click', locationAndLoopUpdate);
+        window.updateLoop = locationAndLoopUpdate;
         if (typeof window.location.hash != "undefined" && window.location.hash.length > 5)
             displayCircularPath();
         else
@@ -232,7 +232,8 @@
         clickMarker = L.marker(e.latlng).addTo(map);
         window.center = e.latlng;
       }
-            
+    
+      window.updateLoop = function() { /*will be replaced once loop.js will be loaded */ };
       function locationUpdate(e) {
             if (document.getElementById("loop-panel").style.display != "block" ||
                 document.getElementById("computation").style.display != "block") {
@@ -251,6 +252,7 @@
                     helpHide();
                 }
         }
+        window.updateLoop();
       }
       window.hashpos = "";
       window.onhashchange = locationUpdate();

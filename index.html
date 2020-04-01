@@ -33,22 +33,45 @@
         #share-facebook { bottom: 230px; }
         #share-twitter { bottom: 170px; }
         #loop-panel { display: none; float: left; position: relative; color: #fff;}
-        #loop-panel p { width: 330px; margin: 0; margin-top: 2px; }
+        #loop-panel p { width: 380px; margin: 0; margin-top: 2px; }
         #loop-panel #noteLoop { font-size: 60%; }
+        .openPanel #loop-panel { display: block; }
         #txtPanel, #buttonOKLoop, #computation, #informationLoop, #nodisc { float: left; position: relative;}
         .panel { width: auto; min-width: 50px; }
         #buttonOKLoop { width: 42px; height: 42px; background-color: #a64d00; border-radius: 25px; padding-top: 1px; margin: 4px; cursor: pointer; }
         #buttonOKLoop p { font-size: 20px; font-weight: bolder; color: white; padding: 7px; }
         #computation, #informationLoop, #nodisc { display: none; }
         #computation p, #nodisc p { font-size: 20px; padding: 10px;  }
-        #msgLoop { font-size: 18px; padding: 12px;  }
+        #msgLoop { font-size: 18px; padding: 10px 12px;  }
+        #cross { display: none; float: left; position: relative; width: 42px; margin-top: -20px; margin-left: 4px; }
+        .openPanel #cross { display: block; }
+        .openPanel #foot { width: 18px; margin-left: 16px; margin-top: 2px;}
+        @media (max-width: 480px) { 
+            .panel.openPanel { z-index: 1001; }
+            .panel.openPanel.largePanel { height: 110px; right: 10px; }
+            #loop.openPanel.largePanel { bottom: 50px; } 
+            #loop-panel { margin-top: -50px; width: 100%; height: 100%; z-index: -1; }
+            #loop-panel div { margin-left: 55px; }
+            .largePanel #loop-panel #txtPanel { padding: 5px; margin-top: 15px; font-size: 110%;}
+            #loop-panel p { width: auto; padding-right: 2px; z-index: -1; }
+            #loop-panel #buttonOKLoop { left: -50px; bottom: 0px; position: absolute;}
+            #computation p, #informationLoop p, #nodisc p { padding-left: 0; margin-top: 6px;}
+            #nodisc p { margin-top: 6px; }
+            #informationLoop p { margin-top: 10px; font-size: 90%; }
+        }
+        @media (max-width: 380px) { 
+            .largePanel #loop-panel #txtPanel { margin-top: 10px; font-size: 100%;}
+            .largePanel #txtLoop { margin-bottom: 10px; }
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
     <div id="help" class="buttons"><p>?</p></div>
     <div id="loop" class="panel">
-        <div id="loopButton"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="m 328.13276,146.90404 c 3.57045,-0.75574 7.44516,0.33901 11.1102,3.67862 11.16746,10.17579 13.06734,25.03121 4.47931,34.02769 -10.19817,10.68254 -20.80379,7.47079 -25.61759,-6.49712 -0.34386,-0.99767 -0.6334,-2.08432 -0.92911,-3.17668 -0.2957,-1.09236 -0.59734,-2.19051 -0.81346,-3.40495 -2.25678,-12.68006 3.91563,-22.96495 11.77076,-24.62756 z m -31.23759,26.56781 c 6.15075,-0.77496 13.46118,5.70946 15.20124,15.88307 2.36392,13.82501 -8.037,21.51291 -17.66241,17.71915 -7.42279,-2.86717 -10.80364,-12.70025 -10.98092,-15.55089 -0.47123,-7.5788 6.12403,-17.12948 13.44209,-18.05133 z m -22.2302,27.41983 c 4.76334,-1.00416 6.38967,1.87904 7.58862,10.35198 2.48201,17.5424 -16.87856,25.25158 -21.73163,8.65938 -2.17034,-7.42007 0.64376,-13.14753 8.22409,-16.79184 2.3805,-1.14445 4.331,-1.88444 5.91892,-2.21914 z m -24.7841,27.42146 c 8.82356,-2.73446 10.42453,0.16765 9.16394,16.98493 -0.54913,7.32625 -3.78269,9.97125 -9.81414,8.23828 -4.12978,-1.18663 -6.62696,-4.51744 -7.57444,-8.43138 -1.57942,-6.52331 1.24439,-14.62903 8.2241,-16.79183 z m 83.27733,-1.51396 c 7.51826,-2.38393 14.79159,-4.10719 21.37436,-4.89158 32.4109,-3.86227 42.8218,-0.32027 59.16743,20.15904 22.41075,28.07657 17.86533,67.94955 -11.54384,102.12342 -63.76031,74.09158 -64.79126,123.77324 -3.78782,179.79329 25.11249,23.0615 43.28546,77.26078 35.46228,105.65264 -9.85288,35.75846 -47.36777,49.43128 -80.10814,29.25261 -30.70957,-18.92572 -65.50037,-83.62098 -89.22844,-160.97448 -1.97739,-6.4464 -3.91447,-12.98062 -5.72965,-19.58957 -5.44518,-19.8263 -10.08525,-40.28971 -13.76663,-60.79295 -11.12001,-61.92753 -8.40629,-110.12004 7.84771,-139.09011 10.1447,-18.08133 47.73323,-41.31247 80.30996,-51.64263 z m 52.58359,-108.48363 c 15.12323,-4.68666 19.51428,8.06427 24.78737,17.84295 9.25777,17.16658 18.06442,39.33023 10.44962,56.38008 -8.5181,19.07354 -25.02138,24.22281 -44.83677,12.09422 -9.94888,-6.08911 -11.22911,-10.70981 -13.8752,-20.19231 -0.88224,-3.16086 -1.61378,-7.62407 -2.19252,-11.99659 -4.00383,-30.24919 1.75707,-46.71811 25.66776,-54.12835 z m 297.29582,249.48681 c -3.49411,-1.05376 -7.44726,-0.28922 -11.38053,2.72986 -11.98478,9.19913 -15.12902,23.84176 -7.32916,33.52956 9.26226,11.50346 20.10069,9.19632 26.07375,-4.31656 0.42667,-0.96517 0.80668,-2.02356 1.19334,-3.08715 0.38665,-1.06357 0.7797,-2.13241 1.09732,-3.32433 3.31667,-12.44496 -1.96762,-23.21314 -9.65482,-25.53139 z m 28.88911,29.10421 c -6.06364,-1.29021 -13.8942,4.5555 -16.48489,14.54642 -3.51984,13.5768 6.19665,22.11333 16.10738,19.14369 7.6379,-2.23184 11.83485,-11.74525 12.25158,-14.57084 1.10784,-7.51219 -4.65964,-17.58438 -11.87407,-19.11927 z m 19.84195,29.19461 c -4.66184,-1.40176 -6.52521,1.33424 -8.43349,9.6761 -3.95059,17.27106 14.69195,26.58336 20.92515,10.45883 2.78753,-7.21093 0.46579,-13.15505 -6.78068,-17.4248 -2.27566,-1.34088 -4.15692,-2.24251 -5.711,-2.70975 z m 22.38665,29.41133 c -8.56192,-3.46785 -10.40161,-0.71089 -10.56183,16.15281 -0.0699,7.34647 2.92949,10.2544 9.08546,9.03555 4.21505,-0.8346 6.98386,-3.94328 8.25761,-7.76352 2.12319,-6.36711 -0.008,-14.68185 -6.78069,-17.42479 z m -82.85396,-8.52209 c -7.29077,-3.00865 -14.39314,-5.33833 -20.88646,-6.67433 -31.97048,-6.57816 -42.64269,-3.92553 -60.655,15.10441 -24.6957,26.08943 -23.52448,66.20355 2.90213,102.73282 57.2939,79.19816 54.13705,128.79014 -11.36761,179.47357 -26.96546,20.86461 -49.63848,73.34084 -44.23422,102.29067 6.80634,36.46124 43.03644,53.245 77.35992,35.89528 32.19437,-16.27208 72.31013,-77.80747 102.4685,-152.88786 2.51328,-6.25696 4.99379,-12.60484 7.3591,-19.03744 7.09559,-19.2973 13.44257,-39.29722 18.83764,-59.41755 16.29597,-60.771 17.6506,-109.02086 3.89417,-139.25689 -8.58588,-18.87147 -44.08438,-45.18574 -75.67537,-58.22278 z M 628.04095,334.46367 c -14.67481,-5.94366 -20.12413,6.39215 -26.20203,15.69201 -10.67062,16.32591 -21.31259,37.66913 -15.16076,55.29971 6.88149,19.72317 22.89248,26.24403 43.65893,15.82736 10.42634,-5.2296 12.09117,-9.72607 15.52646,-18.95203 1.14532,-3.07531 2.25014,-7.46108 3.19508,-11.7693 6.53715,-29.80455 2.18371,-46.70012 -21.01795,-56.09777 z" /></svg></div>
+        <div id="loopButton"><svg id="foot" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="m 328.13276,146.90404 c 3.57045,-0.75574 7.44516,0.33901 11.1102,3.67862 11.16746,10.17579 13.06734,25.03121 4.47931,34.02769 -10.19817,10.68254 -20.80379,7.47079 -25.61759,-6.49712 -0.34386,-0.99767 -0.6334,-2.08432 -0.92911,-3.17668 -0.2957,-1.09236 -0.59734,-2.19051 -0.81346,-3.40495 -2.25678,-12.68006 3.91563,-22.96495 11.77076,-24.62756 z m -31.23759,26.56781 c 6.15075,-0.77496 13.46118,5.70946 15.20124,15.88307 2.36392,13.82501 -8.037,21.51291 -17.66241,17.71915 -7.42279,-2.86717 -10.80364,-12.70025 -10.98092,-15.55089 -0.47123,-7.5788 6.12403,-17.12948 13.44209,-18.05133 z m -22.2302,27.41983 c 4.76334,-1.00416 6.38967,1.87904 7.58862,10.35198 2.48201,17.5424 -16.87856,25.25158 -21.73163,8.65938 -2.17034,-7.42007 0.64376,-13.14753 8.22409,-16.79184 2.3805,-1.14445 4.331,-1.88444 5.91892,-2.21914 z m -24.7841,27.42146 c 8.82356,-2.73446 10.42453,0.16765 9.16394,16.98493 -0.54913,7.32625 -3.78269,9.97125 -9.81414,8.23828 -4.12978,-1.18663 -6.62696,-4.51744 -7.57444,-8.43138 -1.57942,-6.52331 1.24439,-14.62903 8.2241,-16.79183 z m 83.27733,-1.51396 c 7.51826,-2.38393 14.79159,-4.10719 21.37436,-4.89158 32.4109,-3.86227 42.8218,-0.32027 59.16743,20.15904 22.41075,28.07657 17.86533,67.94955 -11.54384,102.12342 -63.76031,74.09158 -64.79126,123.77324 -3.78782,179.79329 25.11249,23.0615 43.28546,77.26078 35.46228,105.65264 -9.85288,35.75846 -47.36777,49.43128 -80.10814,29.25261 -30.70957,-18.92572 -65.50037,-83.62098 -89.22844,-160.97448 -1.97739,-6.4464 -3.91447,-12.98062 -5.72965,-19.58957 -5.44518,-19.8263 -10.08525,-40.28971 -13.76663,-60.79295 -11.12001,-61.92753 -8.40629,-110.12004 7.84771,-139.09011 10.1447,-18.08133 47.73323,-41.31247 80.30996,-51.64263 z m 52.58359,-108.48363 c 15.12323,-4.68666 19.51428,8.06427 24.78737,17.84295 9.25777,17.16658 18.06442,39.33023 10.44962,56.38008 -8.5181,19.07354 -25.02138,24.22281 -44.83677,12.09422 -9.94888,-6.08911 -11.22911,-10.70981 -13.8752,-20.19231 -0.88224,-3.16086 -1.61378,-7.62407 -2.19252,-11.99659 -4.00383,-30.24919 1.75707,-46.71811 25.66776,-54.12835 z m 297.29582,249.48681 c -3.49411,-1.05376 -7.44726,-0.28922 -11.38053,2.72986 -11.98478,9.19913 -15.12902,23.84176 -7.32916,33.52956 9.26226,11.50346 20.10069,9.19632 26.07375,-4.31656 0.42667,-0.96517 0.80668,-2.02356 1.19334,-3.08715 0.38665,-1.06357 0.7797,-2.13241 1.09732,-3.32433 3.31667,-12.44496 -1.96762,-23.21314 -9.65482,-25.53139 z m 28.88911,29.10421 c -6.06364,-1.29021 -13.8942,4.5555 -16.48489,14.54642 -3.51984,13.5768 6.19665,22.11333 16.10738,19.14369 7.6379,-2.23184 11.83485,-11.74525 12.25158,-14.57084 1.10784,-7.51219 -4.65964,-17.58438 -11.87407,-19.11927 z m 19.84195,29.19461 c -4.66184,-1.40176 -6.52521,1.33424 -8.43349,9.6761 -3.95059,17.27106 14.69195,26.58336 20.92515,10.45883 2.78753,-7.21093 0.46579,-13.15505 -6.78068,-17.4248 -2.27566,-1.34088 -4.15692,-2.24251 -5.711,-2.70975 z m 22.38665,29.41133 c -8.56192,-3.46785 -10.40161,-0.71089 -10.56183,16.15281 -0.0699,7.34647 2.92949,10.2544 9.08546,9.03555 4.21505,-0.8346 6.98386,-3.94328 8.25761,-7.76352 2.12319,-6.36711 -0.008,-14.68185 -6.78069,-17.42479 z m -82.85396,-8.52209 c -7.29077,-3.00865 -14.39314,-5.33833 -20.88646,-6.67433 -31.97048,-6.57816 -42.64269,-3.92553 -60.655,15.10441 -24.6957,26.08943 -23.52448,66.20355 2.90213,102.73282 57.2939,79.19816 54.13705,128.79014 -11.36761,179.47357 -26.96546,20.86461 -49.63848,73.34084 -44.23422,102.29067 6.80634,36.46124 43.03644,53.245 77.35992,35.89528 32.19437,-16.27208 72.31013,-77.80747 102.4685,-152.88786 2.51328,-6.25696 4.99379,-12.60484 7.3591,-19.03744 7.09559,-19.2973 13.44257,-39.29722 18.83764,-59.41755 16.29597,-60.771 17.6506,-109.02086 3.89417,-139.25689 -8.58588,-18.87147 -44.08438,-45.18574 -75.67537,-58.22278 z M 628.04095,334.46367 c -14.67481,-5.94366 -20.12413,6.39215 -26.20203,15.69201 -10.67062,16.32591 -21.31259,37.66913 -15.16076,55.29971 6.88149,19.72317 22.89248,26.24403 43.65893,15.82736 10.42634,-5.2296 12.09117,-9.72607 15.52646,-18.95203 1.14532,-3.07531 2.25014,-7.46108 3.19508,-11.7693 6.53715,-29.80455 2.18371,-46.70012 -21.01795,-56.09777 z" /></svg>
+        <svg id="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="m 152.11592,104.31466 -47.8047,47.8047 347.88065,347.88065 -347.88065,347.88065 47.8047,47.80468 347.88065,-347.88065 347.88065,347.88065 47.81156,-47.80468 -347.88065,-347.88065 347.88065,-347.88065 -47.81156,-47.8047 -347.88065,347.88065 z" /></svg>
+        </div>
         <div id="loop-panel">
             <div id="txtPanel">
                 <p id="txtLoop">Afficher l'itinéraire de promenade circulaire*</p>
@@ -116,12 +139,23 @@
 
       }
       
+      function setLargePanelSmallScreens(large) {
+        var element = document.getElementById("loop");
+        var classes = element.className.split(" ");
+        var i = classes.indexOf("largePanel");
+        if (i > 0 && !large) classes.splice(i, 1);
+        if (i < 0 && large) classes.push("largePanel");
+        element.className = classes.join(" ");
+        console.log("setLargePanelSmallScreens", large, i, element.className);
+      }
+      
       function setVisibleInitialQuestion() {
         document.getElementById("txtPanel").style.display = "block";
         document.getElementById("buttonOKLoop").style.display = "block";
         document.getElementById("informationLoop").style.display = "none";
         document.getElementById("computation").style.display = "none";
         document.getElementById("nodisc").style.display = "none";         
+        setLargePanelSmallScreens(true);
       }
       function setVisibleComputation() {
         document.getElementById("txtPanel").style.display = "none";
@@ -129,6 +163,7 @@
         document.getElementById("informationLoop").style.display = "none";
         document.getElementById("computation").style.display = "block";         
         document.getElementById("nodisc").style.display = "none";
+        setLargePanelSmallScreens(false);
       }
       function setVisibleInformation() {
         document.getElementById("txtPanel").style.display = "none";
@@ -136,6 +171,7 @@
         document.getElementById("informationLoop").style.display = "block";
         document.getElementById("computation").style.display = "none";         
         document.getElementById("nodisc").style.display = "none";
+        setLargePanelSmallScreens(false);
       }
       function setVisibleNoDisc() {
         document.getElementById("txtPanel").style.display = "none";
@@ -143,17 +179,29 @@
         document.getElementById("informationLoop").style.display = "none";
         document.getElementById("computation").style.display = "none";         
         document.getElementById("nodisc").style.display = "block";
+        setLargePanelSmallScreens(false);
       }
       
+      function removeOldLoop() {
+        // will be replaced by a new version if loop.js is loaded
+      }
       
       function loopPanelDisplay(e) {
-        if (document.getElementById("loop-panel").style.display == "block") {
-            document.getElementById("loop-panel").style.display = "none";
-            if (removeOldLoop) removeOldLoop();
-            setVisibleInitialQuestion();
+        
+
+        setVisibleInitialQuestion();
+        var element = document.getElementById("loop");
+        var classes = element.className.split(" ");
+        var i = classes.indexOf("openPanel");
+        if (i >= 0) {
+            classes.splice(i, 1);
+            removeOldLoop();           
         }
-        else
-            document.getElementById("loop-panel").style.display = "block";
+        else {
+            classes.push("openPanel");
+            setLargePanelSmallScreens(true);
+        }
+        element.className = classes.join(" ");
       }
 
       
@@ -188,20 +236,20 @@
       function locationUpdate(e) {
             if (document.getElementById("loop-panel").style.display != "block" ||
                 document.getElementById("computation").style.display != "block") {
-            if(e) {
-            if(map.getZoom() < 12) {return;};
-            window.location.hash = e.latlng.lat+','+e.latlng.lng;
-            }
-            var lPos = window.location.hash.substring(1).split(',');
-            if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 &&
-                window.hashpos != lPos) {
-            window.hashpos = lPos;
-            var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
-            map.setView(event.latlng, 15);
-            displayCircle(event);
-            
-            helpHide();
-            }
+                if(e) {
+                    if(map.getZoom() < 12) {return;};
+                        window.location.hash = e.latlng.lat+','+e.latlng.lng;
+                    }
+                    var lPos = window.location.hash.substring(1).split(',');
+                    if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 &&
+                        window.hashpos != lPos) {
+                    window.hashpos = lPos;
+                    var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
+                    map.setView(event.latlng, 15);
+                    displayCircle(event);
+                    
+                    helpHide();
+                }
         }
       }
       window.hashpos = "";

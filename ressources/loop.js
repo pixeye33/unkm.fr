@@ -3,7 +3,7 @@ function getNodesInside(elements, center) {
 
     for(var i = 0; i != elements.length; ++i) {
         if (elements[i].type == "node") {
-            var p = L.latLng(elements[i].lat, elements[i].lon);
+            var p = new L.LatLng(elements[i].lat, elements[i].lon);
             if (p.distanceTo(window.center) < 1000) {
                 result[elements[i].id] = p;
                 result[elements[i].id].neighbours = [];
@@ -125,7 +125,10 @@ function intersection(edge1, edge2, graph) {
         if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
             const x = x1 + (uA * (x2 - x1));
             const y = y1 + (uA * (y2 - y1));
-            return {lat: x, lng: y, uA: uA, uB: uB};
+            var res = new L.LatLng(x, y);
+            res.uA = uA;
+            res.uB = uB;
+            return res;
         }
 
     }
@@ -316,13 +319,19 @@ function setInformationError() {
     setVisibleInformation();
 }
 
-function setInformationDistance(size) {
-    var msg;
-    if (size < 1000)
-        msg = "Longueur de la boucle&nbsp;: " + Math.round(size) + " m";
+function distToStr(dist) {
+    if (dist < 1000)
+        return Math.round(dist) + " m";
     else {
-        msg = "Longueur de la boucle&nbsp;: " + (size/1000).toFixed(3).replace(".", ",") + " km";
+        return  (dist/1000).toFixed(3).replace(".", ",") + " km";
     }
+}
+function setInformationDistance(size, sizePath) {
+    var msg = "Longueur de la boucle&nbsp;: <strong>" + distToStr(size) + "</strong>";
+    if (sizePath > 0) {
+        msg += ".<br /> Longueur du chemin pour s'y rendre&nbsp;: <strong>" + distToStr(sizePath) + ".</strong>";
+    }
+    
     document.getElementById("msgLoop").innerHTML = msg;
     setVisibleInformation();
 }
@@ -455,6 +464,257 @@ function addAutointersections(graph) {
     return graph;
 }
 
+// return distance between a point C and a segment [A, B]
+function distancePointEdge(C, A, B) {
+    // cf http://www.faqs.org/faqs/graphics/algorithms-faq/
+    // Subject 1.02: How do I find the distance from a point to a line?
+    
+    const dist = B.distanceTo(A);
+    if (dist == 0)
+        return {distance: C.distanceTo(A), point: A};
+    const dist2 = dist * dist;
+    
+    const r = ((C.x - A.x) * (B.x - A.x) +
+               (C.y - A.y) * (B.y - A.y)) / dist2;
+
+    if (r < 0) {
+        return {distance: C.distanceTo(A), point: A};
+    }
+    else if (r > 1) {
+        return {distance: C.distanceTo(B), point: B};
+    }
+    else {
+        const Px = A.x + r * (B.x - A.x);
+        const Py = A.y + r * (B.y - A.y);
+        const point = new L.Point(Px, Py);
+        
+        return {distance: C.distanceTo(point), point: point};
+    }
+}
+
+
+// get the point of graph closest to given point. 
+// the returned point can be an existing node, or a coordinate along an edge
+function getClosestPoint(graph, point) {
+    var dist = -1;
+    var cPoint;
+    var eID;
+
+    var pPoint = L.Projection.SphericalMercator.project(point);
+    for(var e = 0; e != graph.edges.length; ++e) {
+        var A = L.Projection.SphericalMercator.project(graph.nodes[graph.edges[e][0]]);
+        var B = L.Projection.SphericalMercator.project(graph.nodes[graph.edges[e][1]]);
+        var cp = distancePointEdge(pPoint, A, B);
+        if (dist < 0 || cp.distance < dist) {
+            dist = cp.distance;
+            cPoint = cp.point;
+            eID = e;
+        }
+    }
+    cPoint = L.Projection.SphericalMercator.unproject(cPoint);
+    
+    return {distance: dist, point: cPoint, edgeID: eID};
+    
+}
+
+// get the node of graph closest to point, adding it on an edge if required
+function getClosestNode(graph, point) {
+    var cPoint = getClosestPoint(graph, point);
+    
+    if ('id' in cPoint.point) {
+        return cPoint.point;
+    }
+    else {
+        
+        var newID = newIDPoint(graph);
+        graph.nodes[newID] = cPoint.point;
+        graph.nodes[newID].id = newID;
+        var edge = graph.edges[cPoint.edgeID];
+        graph.edges.push([edge[0], newID]);
+        graph.edges[cPoint.edgeID][0] = newID;
+        
+        // update graph
+        graph = filterBySelectedEdges(graph, graph.edges);
+        
+        return graph.nodes[newID];
+    }
+}
+
+function addPathToPoint(graph, point) {
+    // get the node of graph closest to point, adding it on an edge if required
+    var cNode = getClosestNode(graph, point);
+ 
+    // if this point is exactly the request point, we return it
+    if (cNode.distanceTo(point) == 0) {
+        return { graph: graph, point: cNode.id};
+    }
+    else {
+        // otherwise we add a new one
+        var newID = newIDPoint(graph);
+        graph.nodes[newID] = new L.LatLng(point.lat, point.lng);
+        graph.nodes[newID].id = newID;
+        graph.edges.push([newID, cNode.id]);
+        graph = filterBySelectedEdges(graph, graph.edges);
+        return { graph: graph, point: newID};
+    }
+}
+
+// Dijkstra implementation
+
+function findShortestPath(graph, source, targets) {
+    // imported from: https://github.com/mburst/dijkstras-algorithm/blob/master/dijkstras.js
+    function PriorityQueue () {
+        this._nodes = [];
+
+        this.enqueue = function (priority, key) {
+            this._nodes.push({key: key, priority: priority });
+            this.sort();
+        };
+        this.dequeue = function () {
+            return this._nodes.shift().key;
+        };
+        this.sort = function () {
+            this._nodes.sort(function (a, b) {
+            return a.priority - b.priority;
+            });
+        };
+        this.isEmpty = function () {
+            return !this._nodes.length;
+        };
+    }
+    const INFINITY = 1/0;
+
+
+    
+    var path = [];
+    
+    if (targets.indexOf(source) != -1)
+        return path;
+    
+    var nodes = new PriorityQueue(),
+        distances = {},
+        previous = {},
+        smallest, vertex, neighbor, alt;
+
+    for(var n in graph.nodes) {
+      if(n == source) {
+        distances[n] = 0;
+        nodes.enqueue(0, n);
+      }
+      else {
+        distances[n] = INFINITY;
+        nodes.enqueue(INFINITY, n);
+      }
+
+      previous[n] = null;
+    }
+
+    while(!nodes.isEmpty()) {
+      smallest = nodes.dequeue();
+      
+
+      if(targets.indexOf(smallest) != -1) {
+        path = [];
+
+        while(previous[smallest]) {
+          path.push(smallest);
+          smallest = previous[smallest];
+        }
+        path.push(source);
+
+        break;
+      }
+
+      if(!smallest || distances[smallest] === INFINITY){
+        continue;
+      }
+
+      for(var n = 0; n != graph.nodes[smallest].neighbours.length; ++n) {
+        var neighbor = graph.nodes[smallest].neighbours[n];
+        var nodeID = "" + neighbor.node;
+        alt = distances[smallest] + graph.nodes[smallest].distanceTo(graph.nodes[nodeID]);
+
+        if(alt < distances[nodeID]) {
+          distances[nodeID] = alt;
+          previous[nodeID] = smallest;
+          nodes.enqueue(alt, nodeID);
+        }
+      }
+    }
+    return path;
+    
+}
+
+function computeShortestPath(graph, targetNodes) {
+    // find the closest point between the selected point and the graph
+    // and add the corresponding path
+    var size = graph.edges.length;
+    var pointAndGraph = addPathToPoint(graph, window.center);
+    var graph = pointAndGraph.graph;
+    var source = pointAndGraph.point;
+    
+    // find the shortest path between source and targetNodes in graph
+    var targets = [];
+    for(var n in targetNodes) {
+        targets.push(n);
+    }
+    
+    
+    // if a supplementary point has been added on the graph
+    if (graph.edges.length != size) {
+        // and if this new point is not the center
+        if (graph.nodes[source].neighbours.length == 1) {
+            // add it to the target list
+            targets.push(graph.nodes[source].neighbours[0].node);
+        }
+    }
+    
+    
+    // compute shortest path between source and targets
+    var path = findShortestPath(graph, source, targets);
+    
+    // build list of edges
+    var edges = [];
+    if (path.length > 1) {
+        for(var p = 1; p != path.length; ++p) {
+            edges.push([path[p - 1], path[p]]);
+        }
+    }
+    
+    // return the corresponding graph
+    return filterBySelectedEdges(graph, edges);
+}
+
+function copyGraph(graph) {
+    var result = {
+       edges: [],
+       nodes: {}
+    };
+    
+    result.edges = JSON.parse(JSON.stringify(graph.edges));
+    
+    for(var n in graph.nodes) {
+        result.nodes[n] = new L.LatLng(graph.nodes[n].lat, graph.nodes[n].lng);
+        result.nodes[n].id = graph.nodes[n].id;
+        result.nodes[n].neighbours = [];
+        for(var nb = 0; nb != graph.nodes[n].neighbours.length; ++nb) {
+            result.nodes[n].neighbours.push(JSON.parse(JSON.stringify(graph.nodes[n].neighbours[nb])));
+        }
+    }
+    return result;
+    
+}
+
+function computeSize(graph) {
+    var result = 0;
+    
+    for(var edge of graph.edges) {
+        result += graph.nodes[edge[0]].distanceTo(graph.nodes[edge[1]]);
+    }
+    
+    return result;
+    
+}
 
 function displayCircularPath(e) {
     setVisibleComputation();
@@ -486,6 +746,9 @@ function displayCircularPath(e) {
 
         // get all edges inside the disc
         var graph = buildGraphInside(response.elements, nodes);
+        
+        // create a copy of the graph to find shortest path
+        var fullGraph = copyGraph(graph);
                                                                 
         // select the largest connected component (not perfect to select the main path, but should be ok)
         graph = keepMainCC(graph);
@@ -510,12 +773,22 @@ function displayCircularPath(e) {
             if (mainCC != null) {
                 graph = mainCC.graph;
                 
+                // build a copy of the shortest path
+                var shortestPath = computeShortestPath(fullGraph, graph.nodes);
+                
+
+
+                // draw the shortest path
+                for(var e = 0; e != shortestPath.edges.length; ++e) {
+                    window.ClickCircularPaths.push(L.polyline(toPolyLine(shortestPath.edges[e], shortestPath.nodes), { color: '#2ab50a'}).addTo(map));
+                }
+
                 // draw the contour
                 for(var e = 0; e != graph.edges.length; ++e) {
                     window.ClickCircularPaths.push(L.polyline(toPolyLine(graph.edges[e], graph.nodes), { color: '#0060f0'}).addTo(map));
                 }
-
-                setInformationDistance(mainCC.size);
+                
+                setInformationDistance(mainCC.size, computeSize(shortestPath));
             }
             else {
                 setInformationError();

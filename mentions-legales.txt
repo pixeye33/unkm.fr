@@ -5,6 +5,7 @@ Propriétaire : Aymerick Dupouey
 Responsable publication : Aymerick Dupouey – unkm@aymerick.fr
 Le responsable publication est une personne physique ou une personne morale.
 Webmaster : Aymerick Dupouey – unkm@aymerick.fr
+Algorithmique de recherche d'itinéraires : Jean-Marie Favreau - j-marie.favreau@uca.fr
 Hébergeur : GitHub – 88 Colin P Kelly Jr, St San Francisco, CA 94107 United States
 
 Conditions générales d’utilisation du site et des services proposes

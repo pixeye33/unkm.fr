@@ -125,7 +125,7 @@ function intersection(edge1, edge2, graph) {
         if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
             const x = x1 + (uA * (x2 - x1));
             const y = y1 + (uA * (y2 - y1));
-            return {lat: x, lng: y};
+            return {lat: x, lng: y, uA: uA, uB: uB};
         }
 
     }
@@ -364,32 +364,72 @@ function mergeSameLocation(graph) {
     return graph;    
 }
 
+function boxFromEdge(edge, graph) {
+    const p1 = graph.nodes[edge[0]];
+    const p2 = graph.nodes[edge[1]];
+    const minX = p1.lat < p2.lat ? p1.lat : p2.lat;
+    const minY = p1.lng < p2.lng ? p1.lng : p2.lng;
+    const maxX = p1.lat > p2.lat ? p1.lat : p2.lat;
+    const maxY = p1.lng > p2.lng ? p1.lng : p2.lng;
+    return {minX: minX, minY: minY, maxX: maxX, maxY: maxY};
+}
+
 function addMiddleCrossing(graph) {
      
-    // update edges
-    const beforeAdd1 = graph.edges.length;
-    for(var e1 = 0; e1 != beforeAdd1; ++e1) {
-        const beforeAdd2 = graph.edges.length;
-        for(var e2 = e1; e2 != beforeAdd2; ++e2) {
-            const inter = intersection(graph.edges[e1], graph.edges[e2], graph);
-            if (inter != null) {
-                // add a new point
-                const newID = newIDPoint(graph, graph.edges[e1][0]);
-                graph.nodes[newID] = new L.LatLng(inter.lat, inter.lng);
-                graph.nodes[newID].id = newID;
-                
-                // add two new edges
-                graph.edges.push([newID, graph.edges[e1][1]]);
-                graph.edges.push([newID, graph.edges[e2][1]]);
-                
-                
-                // update existing edges
-                graph.edges[e1][1] = newID;
-                graph.edges[e2][1] = newID;
+    const index = new Flatbush(graph.edges.length);
+    for (const e of graph.edges) {
+        const b = boxFromEdge(e, graph);
+        index.add(b.minX, b.minY, b.maxX, b.maxY);
+    }
+    index.finish();
+    
+    // compute intersections
+    
+    var intersections = [];
+    for(var e1 = 0; e1 != graph.edges.length; ++e1) {
+        const b = boxFromEdge(graph.edges[e1], graph);
+        const found = index.search(b.minX, b.minY, b.maxX, b.maxY);
+        for(var e2 of found) {
+            if (e1 > e2) {
+                const inter = intersection(graph.edges[e1], graph.edges[e2], graph);
+                if (inter != null) {
+                    intersections.push({e1: e1, e2: e2, coord: inter});
+                }
             }
-            
         }
     }
+    
+    // add nodes corresponding to these intersections and group them in each old edge
+    var edgeSplit = {};
+    for(const inter of intersections) {
+        if (inter !== undefined) {
+            var newID = newIDPoint(graph, inter.e1);
+            graph.nodes[newID] = new L.LatLng(inter.coord.lat, inter.coord.lng);
+            graph.nodes[newID].id = newID;
+            if (!(inter.e1 in edgeSplit)) edgeSplit[inter.e1] = [];
+            if (!(inter.e2 in edgeSplit)) edgeSplit[inter.e2] = [];
+            edgeSplit[inter.e1].push({id: newID, coord: inter.coord.uA, origin: [e1, e2]});
+            edgeSplit[inter.e2].push({id: newID, coord: inter.coord.uB, origin: [e1, e2]});
+        }
+    }
+    
+    // add missing edges along each initial edge
+    for(var es in edgeSplit) {
+        if (edgeSplit[es].length != 0) {
+            const prev = graph.edges[es][1];
+            graph.edges[es][1] = edgeSplit[es][0].id;            
+            if (edgeSplit[es].length > 1) {
+                edgeSplit[es].sort(function(a, b) { return a.coord - b.coord; });
+                for(var e = 1; e != edgeSplit[es].length; ++e) {
+                    var p1 = edgeSplit[es][e - 1].id;
+                    var p2 = edgeSplit[es][e].id;
+                    graph.edges.push([p1, p2]);
+                }
+            }
+            graph.edges.push([edgeSplit[es][edgeSplit[es].length - 1].id, prev]);
+        }
+    }
+
     
     // clear nodes
     for(var e = 0; e != graph.edges.length; ++e) {
@@ -408,14 +448,9 @@ function addMiddleCrossing(graph) {
 }
 
 function addAutointersections(graph) {
-    const t0 = performance.now();
     graph = mergeSameLocation(graph);
-    const t1 = performance.now();
-    console.log("Call to mergeSameLocation took " + (t1 - t0)/1000 + " seconds.");
     
     graph = addMiddleCrossing(graph);
-    const t2 = performance.now();
-    console.log("Call to addMiddleCrossing took " + (t2 - t1)/1000 + " seconds.");
     
     return graph;
 }
@@ -445,7 +480,6 @@ function displayCircularPath(e) {
 
         const response = JSON.parse(request.response);
 
-        const t0 = performance.now();
 
         // get only nodes inside the disc
         var nodes = getNodesInside(response.elements);
@@ -456,19 +490,14 @@ function displayCircularPath(e) {
         // select the largest connected component (not perfect to select the main path, but should be ok)
         graph = keepMainCC(graph);
         
-        const t1 = performance.now();
-        console.log("First steps took " + (t1 - t0)/1000 + " seconds.");
         // add self intersections as new points: it is a trick to avoid 
         // inversions, that is not satisfying (for example when a self intersection
         // corresponds to a bridge), but cannot handle contour without that trick (what is inside 
         // and outside?)
         graph = addAutointersections(graph);
 
-        const t2 = performance.now();
         // build a polygon corresponding to the contour
         graph = getContour(graph);
-        const t3 = performance.now();
-        console.log("Call for getContour took " + (t3 - t2)/1000 + " seconds.");
 
         if (graph != null) {
 

@@ -8,6 +8,8 @@ Webmaster : Aymerick Dupouey – unkm@aymerick.fr
 Algorithmique de recherche d'itinéraires : Jean-Marie Favreau - j-marie.favreau@uca.fr
 Hébergeur : GitHub – 88 Colin P Kelly Jr, St San Francisco, CA 94107 United States
 
+Code source sous licence AGPLv3 disponible : https://github.com/pixeye33/unkm.fr
+
 Conditions générales d’utilisation du site et des services proposes
 
 L’utilisation du site www.unkm.fr implique l’acceptation pleine et entière des conditions générales d’utilisation décrites ci-après… Ces conditions d’utilisation sont susceptibles d’être modifiées ou complétées à tout moment, les utilisateurs du site www.unkm.fr sont donc invités à les consulter de manière régulière.

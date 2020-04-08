@@ -314,41 +314,6 @@ function toPolyLine(edge, nodes) {
 }
 
 
-const gpxHeader = `<?xml version="1.0" encoding="UTF-8"?>
-<gpx
-  version="1.0"
-  creator="GPX from IGN benchmarks list"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://www.topografix.com/GPX/1/0"
-  xmlns:locus="http://www.locusmap.eu"
-  xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
-  <name>Boucle de marche en confinement</name>
-  <desc>Plus grande boucle dans un rayon de 1km</desc>
-  <rte><name>Boucle de marche en confinement</name>
-`;
-
-const gpxFooter = `</rte>
-</gpx>
-`;
-
-function gpxForLoop() {
-     var gpx = "";
-    
-     gpx += gpxHeader;
-
-     if (window.ClickCircularPaths.length != 0) { 
-        for(var p = 0; p != window.ClickCircularPaths.length; ++p) {
-	    var latlngs = window.ClickCircularPaths[p].getLatLngs();
-            for(var i in latlngs)
-	    {
-		gpx += "       <rtept lat=\""+latlngs[i].lat+"\" lon=\""+latlngs[i].lng+"\" \/>\n";
-	    }
-        }
-    }
-    gpx += gpxFooter;
-    return gpx;
-}
-
 function removeOldLoop() {
      if (window.ClickCircularPaths.length != 0) { 
         for(var p = 0; p != window.ClickCircularPaths.length; ++p) {
@@ -767,7 +732,7 @@ function displayCircularPath(e) {
     const square = clickCircle.getBounds();
     const bboxString = square.getSouth() + "," + square.getWest() + ", " + square.getNorth() + "," + square.getEast();
 
-    const query = "[out:json][timeout:25];(way[\"highway\"][\"highway\"!~\"^(motorway|construction|trunk|trunk_link|motorway_link)\"][\"foot\"!~\"^(no|private)\"](" + bboxString + ");way[\"pathway\"](" + bboxString + "););out;>;out skel qt;";
+    const query = "[out:json][timeout:25];(way[\"highway\"][\"highway\"!~\"^(motorway|trunk|trunk_link|motorway_link)\"][\"foot\"!~\"^(no|private)\"](" + bboxString + ");way[\"pathway\"](" + bboxString + "););out;>;out skel qt;";
 
     const server = "https://overpass.kumi.systems/api/interpreter";
 

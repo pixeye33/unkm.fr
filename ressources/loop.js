@@ -324,28 +324,24 @@ const gpxHeader = `<?xml version="1.0" encoding="UTF-8"?>
   xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
   <name>Boucle de marche en confinement</name>
   <desc>Plus grande boucle dans un rayon de 1km</desc>
-  <rte><name>Boucle de marche en confinement</name>
 `;
 
-const gpxFooter = `</rte>
+const gpxFooter = `
 </gpx>
 `;
+
+var gpxBody = "";
 
 function gpxForLoop() {
      var gpx = "";
     
-     gpx += gpxHeader;
 
      if (window.ClickCircularPaths.length != 0) { 
-        for(var p = 0; p != window.ClickCircularPaths.length; ++p) {
-	    var latlngs = window.ClickCircularPaths[p].getLatLngs();
-            for(var i in latlngs)
-	    {
-		gpx += "       <rtept lat=\""+latlngs[i].lat+"\" lon=\""+latlngs[i].lng+"\" \/>\n";
-	    }
-        }
+	 gpx += gpxHeader;
+	 gpx += gpxBody;
+	 gpx += gpxFooter;
     }
-    gpx += gpxFooter;
+
     return gpx;
 }
 
@@ -820,17 +816,62 @@ function displayCircularPath(e) {
                 var shortestPath = computeShortestPath(fullGraph, graph.nodes);
                 
 
+		gpxBody = "";
 
-                // draw the shortest path
-                for(var e = 0; e != shortestPath.edges.length; ++e) {
-                    window.ClickCircularPaths.push(L.polyline(toPolyLine(shortestPath.edges[e], shortestPath.nodes), { color: '#2ab50a'}).addTo(map));
-                }
+                // draw the shortest path and generate GPX
+		if (shortestPath.edges.length)
+		{
+		    gpxBody += "<rte><name>Accès à la boucle</name>";
+		    gpxBody += '<rtept lat="' + shortestPath.nodes[shortestPath.edges[0][0]].lat + '" lon="' + shortestPath.nodes[shortestPath.edges[0][0]].lng + '" />';
+                    for(var e = 0; e != shortestPath.edges.length; ++e) {
+			gpxBody += '<rtept lat="' + shortestPath.nodes[shortestPath.edges[e][1]].lat + '" lon="' + shortestPath.nodes[shortestPath.edges[e][1]].lng + '" />';
+			window.ClickCircularPaths.push(L.polyline(toPolyLine(shortestPath.edges[e], shortestPath.nodes), { color: '#2ab50a'}).addTo(map));
+                    }
+		    gpxBody += "</rte>\n";
+		}
 
-                // draw the contour
+		var neighbours = {};
+
+                // draw the contour and generate GPX
                 for(var e = 0; e != graph.edges.length; ++e) {
                     window.ClickCircularPaths.push(L.polyline(toPolyLine(graph.edges[e], graph.nodes), { color: '#0060f0'}).addTo(map));
+
+		    if (! neighbours[graph.edges[e][0]]) neighbours[graph.edges[e][0]] = [];
+		    neighbours[graph.edges[e][0]].push([graph.edges[e][1]]);
+		    if (! neighbours[graph.edges[e][1]]) neighbours[graph.edges[e][1]] = [];
+		    neighbours[graph.edges[e][1]].push([graph.edges[e][0]]);
                 }
-                
+
+		var neighboursVisited = {};
+		var currentNode;
+		var nextNode;
+
+		if (shortestPath.edges[0])
+		{
+		    currentNode = shortestPath.edges[0][0];
+		}
+		else
+		{
+		    currentNode = graph.edges[0][0];
+		}
+
+		gpxBody += "<rte><name>Boucle de marche</name>";
+		gpxBody += '<rtept lat="' + graph.nodes[currentNode].lat + '" lon="' + graph.nodes[currentNode].lng + '" />';
+
+		nextNode = neighbours[currentNode].pop();
+		while (nextNode)
+		{
+		    gpxBody += '<rtept lat="' + graph.nodes[nextNode].lat + '" lon="' + graph.nodes[nextNode].lng + '" />';
+		    if (! neighboursVisited[currentNode]) neighboursVisited[currentNode] = [];
+		    neighboursVisited[currentNode].push(nextNode);
+		    if (! neighboursVisited[nextNode]) neighboursVisited[nextNode] = [];
+		    neighboursVisited[nextNode].push(currentNode);
+		    currentNode = nextNode;
+		    nextNode = neighbours[currentNode].pop();
+		    while (neighboursVisited[nextNode] && neighboursVisited[nextNode].includes(currentNode)) nextNode = neighbours[currentNode].pop();
+		}
+		gpxBody += "</rte>\n";
+
                 setInformationDistance(mainCC.size, computeSize(shortestPath));
             }
             else {

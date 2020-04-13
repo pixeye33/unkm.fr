@@ -269,7 +269,7 @@
       var geoMarker;
       function geolocationFound(e) {
         if (geoMarker != undefined) { map.removeLayer(geoMarker); };
-        geoMarker = L.circleMarker(e.latlng, {radius: 2, fillColor: "#00f", color: "#00f", weight: 1, opacity: 1, fillOpacity: 1}).addTo(map);
+        geoMarker = L.circleMarker(e.latlng, {radius: 5, fillColor: "#3388ff", color: "#3388ff", weight: 1, opacity: 1, fillOpacity: 1}).addTo(map);
 
         if(window.homeReposition) {
           locationUpdate(e);

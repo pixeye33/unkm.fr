@@ -283,6 +283,7 @@
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
+        map.fitBounds(clickCircle.getBounds());
         window.center = e.latlng;
       }
     
@@ -299,7 +300,7 @@
                         window.hashpos != lPos) {
                     window.hashpos = lPos;
                     var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
-                    map.setView(event.latlng, 15);
+                    map.setView(event.latlng, 14);
                     displayCircle(event);
                     window.homeReposition = false;
                     

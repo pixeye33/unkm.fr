@@ -132,6 +132,12 @@
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; ' + mapLink, maxZoom: 18}).addTo(map);
       L.control.scale().addTo(map);
 
+      L.Circle.include({
+        contains: function (latLng) {
+          return this.getLatLng().distanceTo(latLng) < this.getRadius();
+        }
+      });
+
       map.on('click', helpHide);
       map.on('movestart', helpHide);
       map.on('zoomstart', helpHide);
@@ -220,8 +226,8 @@
       }
       
       function loopSave(e) {
-	var filename = 'loop.gpx';
-	var element = document.createElement('a');
+        var filename = 'loop.gpx';
+        var element = document.createElement('a');
         var text = gpxForLoop();
 
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -271,6 +277,11 @@
         if (geoMarker != undefined) { map.removeLayer(geoMarker); };
         geoMarker = L.circleMarker(e.latlng, {radius: 5, fillColor: "#3388ff", color: "#3388ff", weight: 1, opacity: 1, fillOpacity: 1}).addTo(map);
 
+        if (clickCircle != undefined) {
+          var isInsidecircle = clickCircle.contains(geoMarker.getLatLng());
+          console.log(isInsidecircle);
+        };
+
         if(window.homeReposition) {
           locationUpdate(e);
         }
@@ -283,7 +294,6 @@
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
-        map.fitBounds(clickCircle.getBounds());
         window.center = e.latlng;
       }
     
@@ -300,7 +310,7 @@
                         window.hashpos != lPos) {
                     window.hashpos = lPos;
                     var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
-                    map.setView(event.latlng, 14);
+                    map.setView(event.latlng, 15);
                     displayCircle(event);
                     window.homeReposition = false;
                     

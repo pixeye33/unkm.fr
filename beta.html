@@ -156,6 +156,18 @@
       var svg = document.getElementById("loc").cloneNode(true);
       svg.id = "locPopup";
       document.getElementById("gelocation").appendChild(svg);
+
+      function isInsidecircle() {
+        if (clickCircle != undefined && geoMarker != undefined) {
+          if (clickCircle.contains(geoMarker.getLatLng())) {
+            clickCircle.setStyle({fillOpacity: 0.1, fillColor: '#f07300'});
+          }
+          else {
+            clickCircle.setStyle({fillOpacity: 0.5, fillColor: '#ff0000'});
+            window.navigator.vibrate(200);
+          }
+        }
+      }
       
       function showLoopInternal() {
         window.updateLoop = locationAndLoopUpdate;
@@ -268,6 +280,7 @@
 
       function geolocationRequest() {
         window.homeReposition = true;
+        if (geoMarker != undefined) {geolocationFound({latlng: geoMarker.getLatLng()});};
         map.locate({setView: false, enableHighAccuracy: true, watch: true});
         map.on('locationfound', geolocationFound);
       }
@@ -276,11 +289,7 @@
       function geolocationFound(e) {
         if (geoMarker != undefined) { map.removeLayer(geoMarker); };
         geoMarker = L.circleMarker(e.latlng, {radius: 5, fillColor: "#3388ff", color: "#3388ff", weight: 1, opacity: 1, fillOpacity: 1}).addTo(map);
-
-        if (clickCircle != undefined) {
-          var isInsidecircle = clickCircle.contains(geoMarker.getLatLng());
-          console.log(isInsidecircle);
-        };
+        isInsidecircle();
 
         if(window.homeReposition) {
           locationUpdate(e);
@@ -294,6 +303,7 @@
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
+        isInsidecircle();
         window.center = e.latlng;
       }
     

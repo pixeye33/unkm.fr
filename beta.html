@@ -164,7 +164,6 @@
           }
           else {
             clickCircle.setStyle({fillOpacity: 0.5, fillColor: '#ff0000'});
-            window.navigator.vibrate(200);
           }
         }
       }
@@ -309,23 +308,21 @@
     
       window.updateLoop = function() { /*will be replaced once loop.js will be loaded */ };
       function locationUpdate(e) {
-            if (document.getElementById("loop-panel").style.display != "block" ||
-                document.getElementById("computation").style.display != "block") {
-                if(e) {
-                    if(map.getZoom() < 12) {return;};
-                        window.location.hash = e.latlng.lat+','+e.latlng.lng;
-                    }
-                    var lPos = window.location.hash.substring(1).split(',');
-                    if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 &&
-                        window.hashpos != lPos) {
-                    window.hashpos = lPos;
-                    var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
-                    map.setView(event.latlng, 15);
-                    displayCircle(event);
-                    window.homeReposition = false;
-                    
-                    helpHide();
-                }
+        if (document.getElementById("loop-panel").style.display != "block" || document.getElementById("computation").style.display != "block") {
+          if(e) {
+            if(e.type == "click" && map.getZoom() < 12) {return;};
+            window.location.hash = e.latlng.lat+','+e.latlng.lng;
+          }
+          var lPos = window.location.hash.substring(1).split(',');
+          if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 && window.hashpos != lPos) {
+            window.hashpos = lPos;
+            var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
+            map.setView(event.latlng, 15);
+            displayCircle(event);
+            window.homeReposition = false;
+            
+            helpHide();
+          }
         }
         window.updateLoop();
       }

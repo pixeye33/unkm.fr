@@ -132,6 +132,12 @@
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; ' + mapLink, maxZoom: 18}).addTo(map);
       L.control.scale().addTo(map);
 
+      L.Circle.include({
+        contains: function (latLng) {
+          return this.getLatLng().distanceTo(latLng) < this.getRadius();
+        }
+      });
+
       map.on('click', helpHide);
       map.on('movestart', helpHide);
       map.on('zoomstart', helpHide);
@@ -150,6 +156,17 @@
       var svg = document.getElementById("loc").cloneNode(true);
       svg.id = "locPopup";
       document.getElementById("gelocation").appendChild(svg);
+
+      function isInsidecircle() {
+        if (clickCircle != undefined && geoMarker != undefined) {
+          if (clickCircle.contains(geoMarker.getLatLng())) {
+            clickCircle.setStyle({fillOpacity: 0.1, fillColor: '#f07300'});
+          }
+          else {
+            clickCircle.setStyle({fillOpacity: 0.5, fillColor: '#ff0000'});
+          }
+        }
+      }
       
       function showLoopInternal() {
         window.updateLoop = locationAndLoopUpdate;
@@ -220,8 +237,8 @@
       }
       
       function loopSave(e) {
-	var filename = 'loop.gpx';
-	var element = document.createElement('a');
+        var filename = 'loop.gpx';
+        var element = document.createElement('a');
         var text = gpxForLoop();
 
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -261,12 +278,21 @@
       }
 
       function geolocationRequest() {
-        map.locate({setView: true, maxZoom: 14, enableHighAccuracy: true});
+        window.homeReposition = true;
+        if (geoMarker != undefined) {geolocationFound({latlng: geoMarker.getLatLng()});};
+        map.locate({setView: false, enableHighAccuracy: true, watch: true});
         map.on('locationfound', geolocationFound);
       }
 
+      var geoMarker;
       function geolocationFound(e) {
-        locationUpdate(e);
+        if (geoMarker != undefined) { map.removeLayer(geoMarker); };
+        geoMarker = L.circleMarker(e.latlng, {radius: 5, fillColor: "#3388ff", color: "#3388ff", weight: 1, opacity: 1, fillOpacity: 1}).addTo(map);
+        isInsidecircle();
+
+        if(window.homeReposition) {
+          locationUpdate(e);
+        }
       }
 
       var clickCircle;
@@ -276,27 +302,27 @@
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
+        isInsidecircle();
         window.center = e.latlng;
       }
     
       window.updateLoop = function() { /*will be replaced once loop.js will be loaded */ };
       function locationUpdate(e) {
-            if (document.getElementById("loop-panel").style.display != "block" ||
-                document.getElementById("computation").style.display != "block") {
-                if(e) {
-                    if(map.getZoom() < 12) {return;};
-                        window.location.hash = e.latlng.lat+','+e.latlng.lng;
-                    }
-                    var lPos = window.location.hash.substring(1).split(',');
-                    if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 &&
-                        window.hashpos != lPos) {
-                    window.hashpos = lPos;
-                    var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
-                    map.setView(event.latlng, 15);
-                    displayCircle(event);
-                    
-                    helpHide();
-                }
+        if (document.getElementById("loop-panel").style.display != "block" || document.getElementById("computation").style.display != "block") {
+          if(e) {
+            if(e.type == "click" && map.getZoom() < 12) {return;};
+            window.location.hash = e.latlng.lat+','+e.latlng.lng;
+          }
+          var lPos = window.location.hash.substring(1).split(',');
+          if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 && window.hashpos != lPos) {
+            window.hashpos = lPos;
+            var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
+            map.setView(event.latlng, 15);
+            displayCircle(event);
+            window.homeReposition = false;
+            
+            helpHide();
+          }
         }
         window.updateLoop();
       }

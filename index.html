@@ -296,11 +296,14 @@
       }
 
       var clickCircle;
+      var clickBigcircle;
       var clickMarker;
       function displayCircle(e) {
         if (clickCircle != undefined) { map.removeLayer(clickCircle); };
+        if (clickBigcircle != undefined) { map.removeLayer(clickBigcircle); };
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
+        clickBigcircle = L.circle(e.latlng, 100000, { color: '#EC000C', fillOpacity: 0, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
         isInsidecircle();
         window.center = e.latlng;

@@ -314,9 +314,11 @@
         clickMarker = L.marker(e.latlng).addTo(map);
         if (window.navigator.language.slice(0, 2) == 'es') {
           popupMarker = clickMarker.bindPopup("dé-zoomez pour voir le rayon de 100 km !").openPopup();
+          map.fitBounds(clickCircle.getBounds());
         }
         else {
           popupMarker = clickMarker.bindPopup("zoomez pour voir le rayon de 1 km !").openPopup();
+          map.fitBounds(clickBigcircle.getBounds());
         }
         window.clearTimeout(timeoutHandle);
         timeoutHandle = window.setTimeout(function(){ if (popupMarker != undefined) { popupMarker.closePopup(); }; }, 5000);
@@ -336,7 +338,6 @@
           if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 && window.hashpos != lPos) {
             window.hashpos = lPos;
             var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
-            map.setView(event.latlng, defaultZoom);
             displayCircle(event);
             window.homeReposition = false;
             

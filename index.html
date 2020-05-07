@@ -127,6 +127,11 @@
     </div>
     <script src="ressources/leaflet.js"></script>
     <script>
+      var defaultZoom = 9;
+      if (window.navigator.language.slice(0, 2) == 'es') {
+        defaultZoom = 15;
+      }
+
       var map = L.map('map').setView([46.71109, 1.7191036], 6);
       mapLink = '<a href="https://openstreetmap.org">OpenStreetMap</a> | <a href="mentions-legales.txt">Mentions légales</a>';
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; ' + mapLink, maxZoom: 18}).addTo(map);
@@ -307,9 +312,15 @@
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickBigcircle = L.circle(e.latlng, 100000, { color: '#EC000C', fillOpacity: 0, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
-        popupMarker = clickMarker.bindPopup("zoomez pour voir le rayon de 1 km !").openPopup();
+        if (window.navigator.language.slice(0, 2) == 'es') {
+          popupMarker = clickMarker.bindPopup("dé-zoomez pour voir le rayon de 100 km !").openPopup();
+        }
+        else {
+          popupMarker = clickMarker.bindPopup("zoomez pour voir le rayon de 1 km !").openPopup();
+        }
         window.clearTimeout(timeoutHandle);
         timeoutHandle = window.setTimeout(function(){ if (popupMarker != undefined) { popupMarker.closePopup(); }; }, 5000);
+
         isInsidecircle();
         window.center = e.latlng;
       }
@@ -318,14 +329,14 @@
       function locationUpdate(e) {
         if (document.getElementById("loop-panel").style.display != "block" || document.getElementById("computation").style.display != "block") {
           if(e) {
-            if(e.type == "click" && map.getZoom() < 11) {return;};
+            if(e.type == "click" && map.getZoom() < defaultZoom-1) {return;};
             window.location.hash = e.latlng.lat+','+e.latlng.lng;
           }
           var lPos = window.location.hash.substring(1).split(',');
           if(typeof window.location.hash != "undefined" && window.location.hash.length > 5 && window.hashpos != lPos) {
             window.hashpos = lPos;
             var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
-            map.setView(event.latlng, 10);
+            map.setView(event.latlng, defaultZoom);
             displayCircle(event);
             window.homeReposition = false;
             

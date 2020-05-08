@@ -10,6 +10,14 @@ var toBeProcessed = null;
 
 var curShape = null;
 
+
+var deptStyle = {
+    "color": "#257eca",
+    "weight": 3,
+    "opacity": 1,
+    "fill": false
+};
+
 function loadJSON(callback) {   
 
     var xobj = new XMLHttpRequest();
@@ -86,7 +94,7 @@ function loadDepartment(d, callback) {
 }
 
 function drawDepartment(d) {
-    curShape = L.geoJSON(deptData[d]);
+    curShape = L.geoJSON(deptData[d], {style: deptStyle});
     curShape.addTo(map);
 }
 

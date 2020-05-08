@@ -3,7 +3,7 @@
 LANG=C
 
 first=1
-echo -n "["
+echo -n "{ \"bboxes\": ["
 
 for json in [0-9]*.json; do
 
@@ -23,8 +23,8 @@ for json in [0-9]*.json; do
     maxy=$(echo $y| cut -d " " -f 2)
     midy=$(echo $y| cut -d " " -f 3)
     department=$(echo $json| cut -d "." -f1)
-    echo -n "\t{ code_insee: \"$department\", minx: \"$minx\", maxx: \"$maxx\", miny: \"$miny\", maxy: \"$maxy\", midx: \"$midx\", midy: \"$midy\"}"
+    echo -n "\t{ \"code_insee\": \"$department\", \"minx\": \"$minx\", \"maxx\": \"$maxx\", \"miny\": \"$miny\", \"maxy\": \"$maxy\", \"midx\": \"$midx\", \"midy\": \"$midy\"}"
     
 done
 
-echo "\n]"
+echo "\n]}"

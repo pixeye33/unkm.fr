@@ -312,7 +312,7 @@
         if (clickBigcircle != undefined) { map.removeLayer(clickBigcircle); };
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
-        clickBigcircle = L.circle(e.latlng, 100000, { color: '#EC000C', fillOpacity: 0, opacity: 0.5, weight: 3}).addTo(map);
+        clickBigcircle = L.circle(e.latlng, 100000, { color: '#EC000C', "weight": 3, fillOpacity: 0, opacity: 1}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
         if (window.navigator.language.slice(0, 2) == 'es') {
           popupMarker = clickMarker.bindPopup("dé-zoomez pour voir le rayon de 100 km !").openPopup();

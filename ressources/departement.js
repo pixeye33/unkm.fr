@@ -12,7 +12,7 @@ var curShape = null;
 
 
 var deptStyle = {
-    "color": "#257eca",
+    "color": "#EC000C",
     "weight": 3,
     "opacity": 1,
     "fill": false

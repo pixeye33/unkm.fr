@@ -11,6 +11,7 @@ var toBeProcessed = null;
 var curShape = null;
 var curUnion = null;
 
+var shadow = null;
 
 var deptStyle = {
     "color": "#EC000C",
@@ -26,6 +27,13 @@ var unionStyle = {
     "opacity": 1,
     "fill": false
 };
+
+var shadowStyle = {
+    "color": "#ffffff",
+    "stroke": false,
+    "fillOpacity": 0.5
+};
+    
 
 function loadJSON(callback) {   
 
@@ -167,6 +175,19 @@ function drawDepartment(d) {
     }, { style: unionStyle});
     curUnion.addTo(map);
     
+    
+    var truc = [[[[-90, -360], [90, -360], [90, 360], [-90, 360], [-90, -360]], union[0][0]]].concat(union.slice(1));
+    console.log("trcu", JSON.stringify(truc));
+    // then draw a shadow outside of the allowed region
+    shadow =  L.geoJSON({
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "MultiPolygon",
+            "coordinates": truc}}, { style: shadowStyle });
+    shadow.addTo(map);         
+    
+    
     // hide the initial big circle
     if (clickBigcircle != undefined) { map.removeLayer(clickBigcircle); };
     
@@ -266,6 +287,9 @@ function displayDepartment(e) {
     }
     if (curUnion != null) {
         map.removeLayer(curUnion);
+    }
+    if (shadow != null) {
+        map.removeLayer(shadow);
     }
     
     // set the new coordinate

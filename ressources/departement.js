@@ -119,8 +119,6 @@ function offset(c1, distance, bearing) {
   
   var dByR = distance / 6378137; // distance divided by 6378137 (radius of the earth) wgs84
   
-  console.log("dByR 3", dByR);
-  
   var lat = Math.asin(
     Math.sin(lat1) * Math.cos(dByR) +
       Math.cos(lat1) * Math.sin(dByR) * Math.cos(bearing)
@@ -147,19 +145,18 @@ function polyCircle(center, radius, nbSegments) {
 
 function drawDepartment(d) {
     
-    // hide the initial big circle
-    if (clickBigcircle != undefined) { map.removeLayer(clickBigcircle); };
-    
+
+    // get the shape of the department
     curShape = L.geoJSON(deptData[d], {style: deptStyle});
     curShape.addTo(map);
 
-
+    // compute a polygonal version of the circle
     var circle = polyCircle([wantedCoords.lng, wantedCoords.lat], 100000.0, 1024);
 
-    
+    // compute union between these two shapes
     var union = martinez.union(deptData[d].geometry.coordinates, [circle]);
-    console.log("union", JSON.stringify(union));
     
+    // add the union to the rendering
     curUnion = L.geoJSON({
         "type": "Feature",
         "properties": {},
@@ -170,6 +167,8 @@ function drawDepartment(d) {
     }, { style: unionStyle});
     curUnion.addTo(map);
     
+    // hide the initial big circle
+    if (clickBigcircle != undefined) { map.removeLayer(clickBigcircle); };
     
 }
 

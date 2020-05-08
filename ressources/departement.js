@@ -9,10 +9,19 @@ var wantedCoords = null;
 var toBeProcessed = null;
 
 var curShape = null;
+var curUnion = null;
 
 
 var deptStyle = {
-    "color": "#257eca",
+    "color": "#EC000C",
+    "weight": 3,
+    "opacity": 0.5,
+    "fill": false,
+    "dashArray": '6, 6'
+};
+
+var unionStyle = {
+    "color": "#EC000C",
     "weight": 3,
     "opacity": 1,
     "fill": false
@@ -93,9 +102,75 @@ function loadDepartment(d, callback) {
     xobj.send(null);  
 }
 
+
+// circle discretization from
+// https://github.com/gabzim/circle-to-polygon/blob/master/index.js
+function toRadians(angleInDegrees) {
+  return (angleInDegrees * Math.PI) / 180;
+}
+
+function toDegrees(angleInRadians) {
+  return (angleInRadians * 180) / Math.PI;
+}
+
+function offset(c1, distance, bearing) {
+  var lat1 = toRadians(c1[1]);
+  var lon1 = toRadians(c1[0]);
+  
+  var dByR = distance / 6378137; // distance divided by 6378137 (radius of the earth) wgs84
+  
+  console.log("dByR 3", dByR);
+  
+  var lat = Math.asin(
+    Math.sin(lat1) * Math.cos(dByR) +
+      Math.cos(lat1) * Math.sin(dByR) * Math.cos(bearing)
+  );
+  var lon =
+    lon1 +
+    Math.atan2(
+      Math.sin(bearing) * Math.sin(dByR) * Math.cos(lat1),
+      Math.cos(dByR) - Math.sin(lat1) * Math.sin(lat)
+    );
+  return [toDegrees(lon), toDegrees(lat)];
+}
+
+function polyCircle(center, radius, nbSegments) {
+    var n = nbSegments ? nbSegments : 32;
+    var coordinates = [];
+    for (var i = 0; i < n; ++i) {
+        coordinates.push(offset(center, radius, (2 * Math.PI * -i) / n));
+    }
+    coordinates.push(coordinates[0]);   
+    
+    return coordinates;
+}
+
 function drawDepartment(d) {
+    
+    // hide the initial big circle
+    if (clickBigcircle != undefined) { map.removeLayer(clickBigcircle); };
+    
     curShape = L.geoJSON(deptData[d], {style: deptStyle});
     curShape.addTo(map);
+
+
+    var circle = polyCircle([wantedCoords.lng, wantedCoords.lat], 100000.0, 1024);
+
+    
+    var union = martinez.union(deptData[d].geometry.coordinates, [circle]);
+    console.log("union", JSON.stringify(union));
+    
+    curUnion = L.geoJSON({
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "MultiPolygon",
+            "coordinates": union
+        }
+    }, { style: unionStyle});
+    curUnion.addTo(map);
+    
+    
 }
 
 function insideShape(coords, shape) {
@@ -174,6 +249,9 @@ function displayDepartmentInternal() {
 function displayDepartment(e) {
     if (curShape != null) {
         map.removeLayer(curShape);
+    }
+    if (curUnion != null) {
+        map.removeLayer(curUnion);
     }
     wantedCoords = e.latlng;
     if (bboxes != null) {

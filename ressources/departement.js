@@ -176,8 +176,7 @@ function drawDepartment(d) {
     curUnion.addTo(map);
     
     
-    var truc = [[[[-90, -360], [90, -360], [90, 360], [-90, 360], [-90, -360]], union[0][0]]].concat(union.slice(1));
-    console.log("trcu", JSON.stringify(truc));
+    var truc = [[[[-90, -360], [90, -360], [90, 360], [-90, 360], [-90, -360]]].concat(union.map(x => x[0]))].concat(union.map(x => x.slice(1)));
     // then draw a shadow outside of the allowed region
     shadow =  L.geoJSON({
         "type": "Feature",

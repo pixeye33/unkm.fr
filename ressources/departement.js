@@ -172,9 +172,14 @@ function drawDepartment(d) {
     
 }
 
+
 function insideShape(coords, shape) {
+
     if (shape.length == 0)
         return false;
+    // a shape is defined by a contour, and possibly holes
+
+    // we first check if the point is in the contour
     if (inside(coords, shape[0])) {
         if (shape.length == 1) {
             // no hole: we are "inside"
@@ -196,9 +201,11 @@ function insideShape(coords, shape) {
     
 }
 
+// check if the coordinate is in the shape of the department
 function isInDepartment(coords, dept) {
     var polyCoords = deptData[dept]["geometry"]["coordinates"];
     var c = [coords.lng, coords.lat];
+    // a shape can be a single shape, or multiple shapes (islands)
     if (deptData[dept]["geometry"]["type"] == "Polygon") {
         return insideShape(c, polyCoords);
     }
@@ -219,19 +226,26 @@ function isInDepartment(coords, dept) {
 
 function displayDepartmentInternal() {
     
+    // if the list of possible shapes is unknown, first load it
+    // using the bound boxes and the desired coordinate
     if (toBeProcessed == null) {
         toBeProcessed = getIntersectingBBoxes(wantedCoords);
     }
     
+    // then for each possible match
     for(var i = 0; i != toBeProcessed.length; ++i) {
         var d = toBeProcessed[i]["dept"];
+        // if the shape is already in memory
         if (d in deptData) {
+            // check for intersection
             if (isInDepartment(wantedCoords, d)) {
+                // if it is valid, draw this department
                 drawDepartment(d);
                 break;
             }
         }
         else {
+             // otherwise load the data, then restart the display from this department
              toBeProcessed = toBeProcessed.slice(i);
              loadDepartment(d, function(response) {
                  deptData[d] = JSON.parse(response);
@@ -246,13 +260,18 @@ function displayDepartmentInternal() {
 }
 
 function displayDepartment(e) {
+    // clear previous rendering
     if (curShape != null) {
         map.removeLayer(curShape);
     }
     if (curUnion != null) {
         map.removeLayer(curUnion);
     }
+    
+    // set the new coordinate
     wantedCoords = e.latlng;
+    // if bounding boxes of the departments are ready, 
+    // display the department arround the coordinates
     if (bboxes != null) {
         displayDepartmentInternal();
     }

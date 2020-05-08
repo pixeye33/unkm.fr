@@ -31,7 +31,7 @@ var unionStyle = {
 var shadowStyle = {
     "color": "#ffffff",
     "stroke": false,
-    "fillOpacity": 0.5
+    "fillOpacity": 0.4
 };
     
 

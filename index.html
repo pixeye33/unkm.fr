@@ -314,6 +314,8 @@
         clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
 	clickCircle2 = L.circle(e.latlng, 20000, { color: '#EC000C', fillOpacity: 0, opacity: 0.8}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
+	popupMarker = clickMarker.bindPopup("dé-zoomez pour voir le rayon de 20 km !").openPopup();
+
         map.fitBounds(clickCircle.getBounds());
 
         isInsidecircle();

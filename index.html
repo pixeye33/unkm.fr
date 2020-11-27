@@ -120,10 +120,10 @@
     <div id="info">
       <h4>Comment ça marche ?</h4>
       Zoomez sur votre lieu de confinement<br />
-      Cliquez pour dessiner un cercle de 1km de rayon*<br />
+      Cliquez pour dessiner un cercle de 20km de rayon*<br />
       Vous pouvez aussi vous géolocaliser <span id="gelocation"></span><br /><br />
       Vous pourrez dessiner l'itinéraire de promenade circulaire <span id="infoFoot"></span><br /><br />
-	  <a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000042475143">* Décret n° 2020-1310 du 29 octobre 2020</a>
+	  <a href="https://www.legifrance.gouv.fr/">* En attente du décret officiel</a>
     </div>
     <script src="ressources/leaflet.js"></script>
     <script>
@@ -301,18 +301,14 @@
       }
 
       var clickCircle;
-      var clickCircle2;
       var clickMarker;
       var popupMarker;
       var timeoutHandle;
       function displayCircle(e) {
         if (clickCircle != undefined) { map.removeLayer(clickCircle); };
-        if (clickCircle2 != undefined) { map.removeLayer(clickCircle2); };
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
-        clickCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
-	clickCircle2 = L.circle(e.latlng, 20000, { color: '#EC000C', fillOpacity: 0, opacity: 0.8}).addTo(map);
+        clickCircle = L.circle(e.latlng, 20000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
-	popupMarker = clickMarker.bindPopup("dé-zoomez pour voir le rayon de 20 km !").openPopup();
 
         map.fitBounds(clickCircle.getBounds());
 

@@ -760,7 +760,7 @@ function displayCircularPath(e) {
     
     removeOldLoop();
    
-    const square = clickCircle.getBounds();
+    const square = walkCircle.getBounds();
     const bboxString = square.getSouth() + "," + square.getWest() + ", " + square.getNorth() + "," + square.getEast();
 
     const query = "[out:json][timeout:25];(way[\"highway\"][\"highway\"!~\"^(motorway|construction|trunk|trunk_link|motorway_link)\"][\"foot\"!~\"^(no|private)\"](" + bboxString + ");way[\"pathway\"](" + bboxString + "););out;>;out skel qt;";

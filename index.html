@@ -4,7 +4,7 @@
     <!-- Code source sous licence AGPLv3 : https://github.com/pixeye33/unkm.fr contributions bienvenues !-->
     <title>unkm.fr</title>
     <meta charset="utf-8" />
-    <meta name="description" content="Visualisez rapidement ce que représentent 1km autour de chez vous." />
+    <meta name="description" content="Visualisez rapidement ce que représentent 20km autour de chez vous." />
     <meta property="og:image" content="https://www.unkm.fr/unkm-v4.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=5AByqwEy0P">
@@ -122,7 +122,7 @@
       Zoomez sur votre lieu de confinement<br />
       Cliquez pour dessiner un cercle de 20km de rayon*<br />
       Vous pouvez aussi vous géolocaliser <span id="gelocation"></span><br /><br />
-      Vous pourrez dessiner l'itinéraire de promenade circulaire <span id="infoFoot"></span><br /><br />
+      Et dessiner l'itinéraire de promenade circulaire (1km) <span id="infoFoot"></span><br /><br />
 	  <a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000042574467">* Décret n° 2020-1454</a>
     </div>
     <script src="ressources/leaflet.js"></script>
@@ -300,6 +300,8 @@
         }
       }
 
+
+      var walkCircle;
       var clickCircle;
       var clickMarker;
       var popupMarker;
@@ -307,6 +309,8 @@
       function displayCircle(e) {
         if (clickCircle != undefined) { map.removeLayer(clickCircle); };
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
+
+        walkCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.0, opacity: 0.3, dashArray: '20, 20', dashOffset: '20'}).addTo(map);
         clickCircle = L.circle(e.latlng, 20000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
 
@@ -328,7 +332,7 @@
             window.hashpos = lPos;
             var event = {latlng: L.latLng(window.hashpos[0], window.hashpos[1])}
             displayCircle(event);
-            displayDepartment(event);
+            //displayDepartment(event);
             window.homeReposition = false;
             
             helpHide();

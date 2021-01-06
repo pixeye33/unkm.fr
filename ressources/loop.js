@@ -763,8 +763,10 @@ function displayCircularPath(e) {
     const square = walkCircle.getBounds();
     const bboxString = square.getSouth() + "," + square.getWest() + ", " + square.getNorth() + "," + square.getEast();
 
-    const query = "[out:json][timeout:25];(way[\"highway\"][\"highway\"!~\"^(motorway|construction|trunk|trunk_link|motorway_link)\"][\"access\"!~\"^(private)\"][\"foot\"!~\"^(no|private)\"](" + bboxString + ");way[\"pathway\"](" + bboxString + "););out;>;out skel qt;";
-
+    const query = "[out:json][timeout:25];(way[\"highway\"][\"highway\"!~\"^(motorway|construction|trunk|trunk_link|motorway_link)\"][\"foot\"][\"foot\"!~\"^(yes|designated|permissive)\"](" + bboxString + ");\
+    way[\"highway\"][\"highway\"!~\"^(motorway|construction|trunk|trunk_link|motorway_link)\"][\"access\"!~\"^(no|service|private)\"][!\"foot\"](" + bboxString + ");\
+    way[\"pathway\"](" + bboxString + "););out;>;out skel qt;";
+    
     const server = "https://overpass.kumi.systems/api/interpreter";
 
     const request = new XMLHttpRequest();

@@ -20,9 +20,12 @@
         body { padding: 0; margin: 0; font-family: 'Roboto', arial, 'Segoe UI', 'Roboto', arial, system-ui, BlinkMacSystemFont, 'Roboto', arial, sans-serif; }
         html, body, #map { height: 100%; width: 100%; }
         h4 { padding: 5px; margin: 5px; }
-        #info { position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -110px; margin-left: -252px; height: 220px; width: 500px; text-align: center; border: 2px solid #f07300; background-color: rgba(255, 255, 255, 0.8); font-size: 17.5px; cursor: pointer; line-height: 1em; }
+        #info { position: fixed; z-index: 500; top: 50%; left: 50%; margin-top: -110px; margin-left: -252px; height: 220px; width: 500px; text-align: center; border: 2px solid #f07300; background-color: rgba(255, 255, 255, 0.8); font-size: 17.5px; cursor: pointer; line-height: 1em; }
         #info p { margin: 0px 20px; }
         #info > a { font-size: 12px; color: #f07300; }
+        #legalloop { display: none; position: fixed; z-index: 1000; top: 50%; left: 50%; margin-top: -140px; margin-left: -252px; height: 280px; width: 500px; text-align: center; border: 2px solid #f07300; background-color: rgba(255, 255, 255, 1); font-size: 15px; cursor: pointer; line-height: 1em; }
+        #legalloop p { margin: 0px 20px; }
+        #legalloop > a { font-size: 12px; color: #f07300; }
         #footPopup, #locPopup { vertical-align: middle; background: #f07300; fill: #fff; border-radius: 50%; width: 2em; height: 2em; padding: 0.2em;}
         @media (max-width: 480px) { #info { margin-top: -100px; margin-left: -182px; height: 200px; width: 360px; font-size: 14px; } }
         #info span svg { width: 2em; }
@@ -40,10 +43,9 @@
         #loop-panel p { width: 380px; margin: 0; margin-top: 2px; }
         #loop-panel #noteLoop { font-size: 60%; }
         .openPanel #loop-panel { display: block; }
-        #txtPanel, #buttonOKLoop, #buttonSaveLoop, #computation, #informationLoop, #nodisc { float: left; position: relative;}
+        #buttonSaveLoop, #computation, #informationLoop, #nodisc { float: left; position: relative;}
         .panel { width: auto; min-width: 50px; }
-        #buttonOKLoop, #buttonSaveLoop { width: 42px; height: 42px; background-color: #fff; border-radius: 25px; padding-top: 0px; margin: 4px; cursor: pointer; }
-        #buttonOKLoop p { font-size: 20px; font-weight: bolder; color: #f07300; padding: 7px; }
+        #buttonSaveLoop { width: 42px; height: 42px; background-color: #fff; border-radius: 25px; padding-top: 0px; margin: 4px; cursor: pointer; }
         #buttonSaveLoop p { font-size: 14px; font-weight: bolder; color: #f07300; padding: 7px; margin-top: 6px; margin-left: -4px; }
         #computation, #informationLoop, #nodisc { display: none; }
         #informationLoop { padding-top: 2px; }
@@ -58,9 +60,7 @@
             #loop.openPanel.largePanel { bottom: 50px; } 
             #loop-panel { margin-top: -50px; width: 100%; height: 100%; z-index: -1; }
             #loop-panel div { margin-left: 55px; }
-            .largePanel #loop-panel #txtPanel { padding: 5px; margin-top: 15px; font-size: 110%;}
             #loop-panel p { width: auto; padding-right: 2px; z-index: -1; }
-            #loop-panel #buttonOKLoop { left: -50px; bottom: 0px; position: absolute;}
             #loop-panel #buttonSaveLoop { right: 0px; bottom: 0px; position: absolute;}
             #computation p, #informationLoop p, #nodisc p { padding-left: 0; margin-top: 6px;}
             #nodisc p { margin-top: 6px; }
@@ -70,7 +70,6 @@
             #info p { margin: 15px; }
         }
         @media (max-width: 380px) { 
-            .largePanel #loop-panel #txtPanel { margin-top: 10px; font-size: 100%;}
             .largePanel #txtLoop { margin-bottom: 10px; }
             #informationLoop p { font-size: 70%; line-height: 1.5em; margin-top: 9px; }
         }
@@ -84,13 +83,6 @@
         <svg id="cross" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><path d="m 152.11592,104.31466 -47.8047,47.8047 347.88065,347.88065 -347.88065,347.88065 47.8047,47.80468 347.88065,-347.88065 347.88065,347.88065 47.81156,-47.80468 -347.88065,-347.88065 347.88065,-347.88065 -47.81156,-47.8047 -347.88065,347.88065 z" /></svg>
         </div>
         <div id="loop-panel">
-            <div id="txtPanel">
-                <p id="txtLoop">Afficher l'itinéraire de promenade circulaire*</p>
-                <p id="noteLoop">* votre localisation sera envoyée au serveur <a href="https://overpass.kumi.systems">Overpass de Kumi Systems</a> pour obtenir les tracés OpenStreetMap des routes de votre voisinage.</p>
-            </div>
-            <div id="buttonOKLoop">
-                <p>OK</p>
-            </div>
             <div id="nodisc">
                 <p>Choisissez d'abord un lieu</p>
             </div>
@@ -125,6 +117,15 @@
       Et dessiner l'itinéraire de promenade circulaire (1km) <span id="infoFoot"></span><br /><br />
 	  <a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000042574467">* Décret n° 2020-1454</a>
     </div>
+    <div id="legalloop">
+      <h4>Itinéraire de promenade circulaire</h4>
+      En utilisant cette fonction vous confirmez :<br /><br />
+      Avoir compris qu'il s'agit d'une suggestion,<br />qu'elle peut comporter des erreurs.<br /><br />
+      Que si le résultat vous indique la traversée<br />d'une zone dangeureuse, interdite ou privée<br /><br />
+      vous ne devez pas vous y engager :<br /><b>vous êtes responsables de vos actions</b><br /><br />
+	    Egalement, votre localisation sera envoyée aux serveurs de <a href="https://overpass.kumi.systems">Kumi Systems</a> pour obtenir les tracés OpenStreetMap des routes de votre voisinage<br /><br />
+      <button id="KOlegalloop">Annuler</button><button id="OKlegalloop">Confirmer</button>
+    </div>
     <script src="ressources/leaflet.js"></script>
     <script>
       var defaultZoom = 9;
@@ -143,12 +144,16 @@
       map.on('click', helpHide);
       map.on('movestart', helpHide);
       map.on('zoomstart', helpHide);
+      map.on('click', legalloopHide);
+      map.on('movestart', legalloopHide);
+      map.on('zoomstart', legalloopHide);
       document.getElementById("info").onclick = helpHide;
       document.getElementById("help").onclick = helpDisplay;
-      document.getElementById("loopButton").onclick = loopPanelDisplay;
+      document.getElementById("loopButton").onclick = legalloopDisplay;
       document.getElementById("gelocation").onclick = geolocationRequest;
       document.getElementById("geoButton").onclick = geolocationRequest;
-      document.getElementById("buttonOKLoop").onclick = showLoop;
+      document.getElementById("OKlegalloop").onclick = showLoop;
+      document.getElementById("KOlegalloop").onclick = legalloopHide;
       document.getElementById("buttonSaveLoop").onclick = loopSave;
       
       var svg = document.getElementById("foot").cloneNode(true);
@@ -179,6 +184,8 @@
       }
       
       function showLoop(e) {
+        legalloopHide();
+        loopPanelDisplay();
         window.ClickCircularPaths = [];
         var scriptTag = document.createElement('script');
         scriptTag.src = "ressources/loop.js?v=gahPh7vo";
@@ -198,17 +205,14 @@
       }
       
       function setVisibleInitialQuestion() {
-        document.getElementById("txtPanel").style.display = "block";
-        document.getElementById("buttonOKLoop").style.display = "block";
+        document.getElementById("legalloop").style.display = "block";
         document.getElementById("buttonSaveLoop").style.display = "none";
         document.getElementById("informationLoop").style.display = "none";
         document.getElementById("computation").style.display = "none";
-        document.getElementById("nodisc").style.display = "none";         
+        document.getElementById("nodisc").style.display = "none";
         setLargePanelSmallScreens(true);
       }
       function setVisibleComputation() {
-        document.getElementById("txtPanel").style.display = "none";
-        document.getElementById("buttonOKLoop").style.display = "none";
         document.getElementById("buttonSaveLoop").style.display = "none";
         document.getElementById("informationLoop").style.display = "none";
         document.getElementById("computation").style.display = "block";         
@@ -216,8 +220,6 @@
         setLargePanelSmallScreens(false);
       }
       function setVisibleInformation() {
-        document.getElementById("txtPanel").style.display = "none";
-        document.getElementById("buttonOKLoop").style.display = "none";
         document.getElementById("buttonSaveLoop").style.display = "block";
         document.getElementById("informationLoop").style.display = "block";
         document.getElementById("computation").style.display = "none";         
@@ -225,8 +227,6 @@
         setLargePanelSmallScreens(false);
       }
       function setVisibleNoDisc() {
-        document.getElementById("txtPanel").style.display = "none";
-        document.getElementById("buttonOKLoop").style.display = "none";
         document.getElementById("buttonSaveLoop").style.display = "none";
         document.getElementById("informationLoop").style.display = "none";
         document.getElementById("computation").style.display = "none";         
@@ -252,9 +252,7 @@
       }
 
       function loopPanelDisplay(e) {
-        
-
-        setVisibleInitialQuestion();
+        /*setVisibleInitialQuestion();*/
         var element = document.getElementById("loop");
         var classes = element.className.split(" ");
         var i = classes.indexOf("openPanel");
@@ -269,7 +267,22 @@
         element.className = classes.join(" ");
       }
 
-      
+      function legalloopDisplay(e) {
+        var element = document.getElementById("loop");
+        var classes = element.className.split(" ");
+        var i = classes.indexOf("openPanel");
+        if (i >= 0) {
+          loopPanelDisplay();
+        }
+        else {
+          document.getElementById("legalloop").style.display = "block";
+        }
+      }
+
+      function legalloopHide(e) {
+        document.getElementById("legalloop").style.display = "none";
+      }
+
       function helpHide(e) {
         document.getElementById("info").style.display = "none";
         map.on('click', locationUpdate);

@@ -115,7 +115,6 @@
       Cliquez pour dessiner un cercle de 10km de rayon*<br />
       Vous pouvez aussi vous géolocaliser <span id="gelocation"></span><br /><br />
       Et dessiner l'itinéraire de promenade circulaire (10km) <span id="infoFoot"></span><br /><br />
-	  <a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000042574467">* Décret n° 2020-1454</a>
     </div>
     <div id="legalloop">
       <h4>Itinéraire de promenade circulaire</h4>
@@ -319,9 +318,10 @@
       function displayCircle(e) {
         if (clickCircle != undefined) { map.removeLayer(clickCircle); };
         if (clickMarker != undefined) { map.removeLayer(clickMarker); };
+        if (walkCircle != undefined) { map.removeLayer(walkCircle); };
 
-        walkCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.0, opacity: 0.3, dashArray: '20, 20', dashOffset: '20'}).addTo(map);
-        clickCircle = L.circle(e.latlng, 10000, { color: '#f07300', fillOpacity: 0.1, opacity: 0.5}).addTo(map);
+        clickCircle = L.circle(e.latlng, 10000, { color: '#cf0000', fillOpacity: 0.07, opacity: 0.5}).addTo(map);
+        walkCircle = L.circle(e.latlng, 1000, { color: '#f07300', fillOpacity: 0.0, opacity: 1, dashArray: '5, 5', dashOffset: '5'}).addTo(map);
         clickMarker = L.marker(e.latlng).addTo(map);
 
         map.fitBounds(clickCircle.getBounds());
